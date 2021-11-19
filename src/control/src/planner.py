@@ -6,7 +6,7 @@ from moveit_msgs.msg import OrientationConstraint, Constraints, CollisionObject
 from geometry_msgs.msg import PoseStamped
 from shape_msgs.msg import SolidPrimitive
 
-class PathPlanner():
+class Planner():
     def __init__(self):
             def __init__(self, group_name):
         """
@@ -68,9 +68,6 @@ class PathPlanner():
         return plan
 
     def _get_end_pose(self):
-        # get the end effector pose based on the position of the target
-        pass
-
-    def execute_path(self, path):
+        # get the desired end effector pose based on the position of the target
         pass
 
