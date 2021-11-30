@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 import rospy
 
-# from sensor_msgs.msg import Image
-# from lab4_cam.srv import ImageSrv, ImageSrvResponse
-from moveit_msgs.srv import GetPositionIK, GetPositionIKRequest, GetPositionIKResponse
 from control.srv import PickUpBall
+# from computer_vision.srv import GetBallPose
+
+from moveit_msgs.srv import GetPositionIK, GetPositionIKRequest, GetPositionIKResponse
 from geometry_msgs.msg import PoseStamped
 from moveit_commander import MoveGroupCommander
-# from computer_vision.srv import GetBallPose
 from baxter_interface import gripper as robot_gripper
 
 class Picker:
@@ -115,6 +114,3 @@ class Picker:
 if __name__ == '__main__':
     node = Picker()
     node.run()
-
-
-
