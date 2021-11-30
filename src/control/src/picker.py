@@ -97,7 +97,7 @@ class Picker:
     def getPoseAbove(ball_pose):
         above_pose = StampedPose()
         above_pose.pose.position = ball_pose.pose.position
-        above_pose.pose.position.y += 0.5
+        above_pose.pose.position.z += 0.4
         above_pose.pose.orientation.x = 0.0
         above_pose.pose.orientation.y = 1.0
         above_pose.pose.orientation.z = 0.0
