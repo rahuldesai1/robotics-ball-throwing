@@ -23,14 +23,14 @@ class Picker:
         # Create the function used to get the position of the ball
         # self.get_ball_pose = rospy.ServiceProxy('ball_pose', GetBallPose)
         mocked_result = PoseStamped()
-        mocked_result.pose.position.x = 0.587
-        mocked_result.pose.position.y = -0.720
-        mocked_result.pose.position.z = 0.065
+        mocked_result.pose.position.x = 0.590
+        mocked_result.pose.position.y = 0.288
+        mocked_result.pose.position.z = -0.179
         self.get_ball_pose = lambda: mocked_result
         self.compute_ik = rospy.ServiceProxy('compute_ik', GetPositionIK)
 
-        self.arm = 'right'
-        self.right_gripper = robot_gripper.Gripper(self.arm)
+        self.arm = 'left'
+        self.gripper = robot_gripper.Gripper(self.arm)
 
     def _moveArmToTarget(self, target):
         request = GetPositionIKRequest()
@@ -77,10 +77,11 @@ class Picker:
         above_pose = self.getPoseAbove(ball_pose)
 
         print('Calibrating Gripper...')
-        self.right_gripper.calibrate()
+        self.gripper.calibrate()
         rospy.sleep(2.0)
         # open gripper
-        self.right_gripper.open()
+        print("Opening...")
+        self.gripper.open()
         rospy.sleep(1.0)
 
         # use move it to compute IK and orient the end effector
@@ -88,7 +89,8 @@ class Picker:
         self._moveArmToTarget(ball_pose)
 
         # close gripper
-        self.right_gripper.close()
+        print("Closing...")
+        self.gripper.close()
         rospy.sleep(1.0)
 
         self._moveArmToTarget(above_pose)
