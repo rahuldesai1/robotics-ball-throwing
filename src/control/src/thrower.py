@@ -4,8 +4,6 @@ import time
 
 from control.srv import ThrowBall
 # from computer_vision.srv import GetTargetPose
-# from planner import Planner
-# from controller import Controller
 
 from moveit_msgs.srv import GetPositionIK, GetPositionIKRequest, GetPositionIKResponse
 from baxter_interface import gripper as robot_gripper
@@ -41,9 +39,6 @@ class Thrower:
         self.throwing_elbow = 'left_e0'
         self.gripper = robot_gripper.Gripper(self.arm)
         self.limb = Limb(self.arm)
-
-        # self.planner = Planner()
-        # self.controller = Controller()
 
         def _moveArmToTarget(self, target):
             request = GetPositionIKRequest()
@@ -114,9 +109,6 @@ class Thrower:
         
         # self._moveArmToTarget(target_pose)
 
-        # logic to throw ball to target
-        # plan = self.planner.plan_to_pose(target_pose)
-        # return self.controller.execute_plan(plan)
         return True
       
     def run(self):
