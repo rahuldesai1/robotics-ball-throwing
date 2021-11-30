@@ -30,6 +30,8 @@ class Picker:
 
         self.arm = 'left'
         self.gripper = robot_gripper.Gripper(self.arm)
+        print('Calibrating Gripper...')
+        self.gripper.calibrate()
 
     def _moveArmToTarget(self, target):
         request = GetPositionIKRequest()
@@ -73,10 +75,6 @@ class Picker:
         # get the position of the ball in ?? coordinates
         ball_pose = self.get_ball_pose()
         above_pose = self.getPoseAbove(ball_pose)
-
-        print('Calibrating Gripper...')
-        self.gripper.calibrate()
-        rospy.sleep(2.0)
 
         # use move it to compute IK and orient the end effector
         self._moveArmToTarget(above_pose)
