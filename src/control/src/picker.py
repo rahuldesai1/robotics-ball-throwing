@@ -57,7 +57,6 @@ class Picker:
             response = self.compute_ik(request)
 
             # Print the response HERE
-            print(response)
             group = MoveGroupCommander(self.arm + "_arm")
 
             # Setting position and orientation target
@@ -79,13 +78,15 @@ class Picker:
         print('Calibrating Gripper...')
         self.gripper.calibrate()
         rospy.sleep(2.0)
+
+        # use move it to compute IK and orient the end effector
+        self._moveArmToTarget(above_pose)
+
         # open gripper
         print("Opening...")
         self.gripper.open()
         rospy.sleep(1.0)
 
-        # use move it to compute IK and orient the end effector
-        self._moveArmToTarget(above_pose)
         self._moveArmToTarget(ball_pose)
 
         # close gripper
@@ -96,10 +97,11 @@ class Picker:
         self._moveArmToTarget(above_pose)
         return True
 
-    def getPoseAbove(ball_pose):
-        above_pose = StampedPose()
-        above_pose.pose.position = ball_pose.pose.position
-        above_pose.pose.position.z += 0.4
+    def getPoseAbove(self, ball_pose):
+        above_pose = PoseStamped()
+        above_pose.pose.position.x = ball_pose.pose.position.x
+        above_pose.pose.position.y = ball_pose.pose.position.y
+        above_pose.pose.position.z = ball_pose.pose.position.z + 0.2
         above_pose.pose.orientation.x = 0.0
         above_pose.pose.orientation.y = 1.0
         above_pose.pose.orientation.z = 0.0
