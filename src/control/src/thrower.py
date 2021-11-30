@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from EE106A_labs.lab3.src.forward_kinematics.src.forward_kinematics_node import callback
 import rospy
 import time
 
@@ -13,7 +14,11 @@ from baxter_interface import Limb
 from geometry_msgs.msg import PoseStamped
 from moveit_commander import MoveGroupCommander
 
+pi = math.PI
 STARTING_JOINT_POSITIONS = {'left_w0': 1.4024419353242394, 'left_w1': -0.08015049616701286, 'left_w2': -2.8785149484669788, 'left_e0': -3.05453924387683, 'left_e1': 1.6693545924163016, 'left_s0': 0.6093738679874806, 'left_s1': 0.054072822772960834}
+STARTING_JOINT_POSITIONS = {'left_w0': pi/2, 'left_w1': 0, 'left_w2': 3/2*pi, 'left_e0': -pi, 'left_e1': pi/2, 'left_s0': 0.6093738679874806, 'left_s1': 0}
+
+
 TARGET_JOINT_POSITIONS = {'left_w0': 1.2816409482782631, 'left_w1': 0.1737233242280231, 'left_w2': -2.90152466028526, 'left_e0': -1.8461458782200955, 'left_e1': 1.6064613801129994, 'left_s0': 0.7202039799122018, 'left_s1': -0.05675728915176031}
 TARGET_JOINT_VELOCITY = {{'left_w0': 0, 'left_w1': 0, 'left_w2': 0, 'left_e0': 0.1, 'left_e1': 0, 'left_s0': 0, 'left_s1': 0}}
 JOINT_NAMES = ["left_s0", "left_s1", "left_e0", "left_e1", "left_w0", "left_w1", "left_w2"]
@@ -41,6 +46,8 @@ class Thrower:
         self.throwing_elbow = 'left_e0'
         self.gripper = robot_gripper.Gripper(self.arm)
         self.limb = Limb(self.arm)
+        self.loop_period = 0.01
+        self.limb.set_command_timeout(self.loop_period*5) # ensure we don't timeout
 
         # self.planner = Planner()
         # self.controller = Controller()
@@ -94,14 +101,30 @@ class Thrower:
             self.limb.set_joint_positions(joint_positions)
             time.sleep(0.01)
 
-    def _setJointVelocities(self, joint_velocities):
-        def close_enough(delta, target):
-            return self.limb.joint_angle(self.throwing_elbow) > TARGET_JOINT_POSITIONS[self.throwing_elbow]
+    # def _setJointVelocities(self, joint_velocities):
+    #     def close_enough(delta, target):
+    #         return self.limb.joint_angle(self.throwing_elbow) > TARGET_JOINT_POSITIONS[self.throwing_elbow]
 
-        delta = 0.1
-        while not close_enough(delta, joint_velocities):
-            self.limb.set_joint_velocities(joint_velocities)
-            time.sleep(0.01)
+    #     delta = 0.1
+    #     while not close_enough(delta, joint_velocities):
+    #         self.limb.set_joint_velocities(joint_velocities)
+    #         time.sleep(0.01)
+    
+    def constantJointVel(self, joint_name, vel, limit_angle, release_angle, callback):
+        passed_callback = False
+        angle = self.limb.joint_angle(joint_name)
+        while True:
+            if not passed_callback and math.sign(release_angle - angle) == math.sign(vel):
+                passed_callback = True
+                callback()
+            if math.sign(limit_angle - angle) != math.sign(vel):
+                self.limb.set_joint_velocities({joint_name: 0})
+                return
+            self.limb.set_joint_velocities({joint_name: vel})
+            time.sleep(self.loop_period)
+            angle = self.limb.joint_angle(joint_name)
+
+
 
     # Callback
     def throwBall(self, request):
@@ -109,8 +132,29 @@ class Thrower:
         target_pose = self.get_target_pose()
         
         # print(self.limb.joint_angles())
-        self._setJointPositions(STARTING_JOINT_POSITIONS)
-        self._setJointVelocities(TARGET_JOINT_VELOCITY)
+        goal_direction = 0.6
+        starting_positions = {
+            'left_s0': goal_direction,
+            'left_s1': 0,
+            'left_e0': -pi,
+            'left_e1': pi/2,
+            'left_w0': pi/2,
+            'left_w1': 0,
+            'left_w2': 3/2*pi,
+        }
+        start_angle = -pi
+        limit_angle = -pi/2
+        release_angle = -2
+        vel = 1
+        moving_joint = 'left_e0'
+        open_gripper = lambda: None
+
+
+
+        self._setJointPositions(starting_positions)
+        self.constantJointVel(moving_joint, vel, limit_angle, release_angle, callback=open_gripper)
+
+        # self._setJointVelocities(TARGET_JOINT_VELOCITY)
         
         # self._moveArmToTarget(target_pose)
 
