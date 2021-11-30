@@ -1,4 +1,4 @@
 # Request message types
 ---
 # Response message types
-boolean success
+bool success

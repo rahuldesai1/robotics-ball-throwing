@@ -1,0 +1,18 @@
+Terminal1:
+Roslaunch ik move_group.launch
+
+Terminal2:
+Rosrun tf static_transform_publisher 0 0 0 0 0 0 world base 100
+
+Terminal3:
+./baxter.sh ayrton.local
+Rosrun baxter_tools enable_robot.py -e
+Rosrun baxter_interface jointrajectory_action_server.py
+
+Terminal4:
+./baxter.sh ayrton.local
+Roslaunch baxter_moveit_config demo_baxter.launch right_electric_gripper:=true left_electric_gripper:=true
+
+Terminal5: 
+./baxter.sh ayrton.local
+Rosrun move_arm pickandplace.py baxter
