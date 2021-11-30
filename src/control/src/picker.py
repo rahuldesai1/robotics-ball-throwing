@@ -5,7 +5,7 @@ import rospy
 # from lab4_cam.srv import ImageSrv, ImageSrvResponse
 from control.srv import PickUpBall
 from moveit_msgs.srv import GetPositionIK, GetPositionIKRequest, GetPositionIKResponse
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, Pose
 from moveit_commander import MoveGroupCommander
 from computer_vision.srv import GetBallPose
 from baxter_interface import gripper as robot_gripper
@@ -72,6 +72,7 @@ class Picker:
     def pickBall(self, request):
         # get the position of the ball in ?? coordinates
         ball_pose = self.get_ball_pose()
+        above_pose = self.getPoseAbove(ball_pose)
 
         print('Calibrating Gripper...')
         self.right_gripper.calibrate()
@@ -81,14 +82,26 @@ class Picker:
         rospy.sleep(1.0)
 
         # use move it to compute IK and orient the end effector
+        self._moveArmToTarget(above_pose)
         self._moveArmToTarget(ball_pose)
 
         # close gripper
         self.right_gripper.close()
         rospy.sleep(1.0)
 
+        self._moveArmToTarget(above_pose)
         return True
-      
+
+    def getPoseAbove(ball_pose):
+        above_pose = StampedPose()
+        above_pose.pose.position = ball_pose.pose.position
+        above_pose.pose.position.y += 0.5
+        above_pose.pose.orientation.x = 0.0
+        above_pose.pose.orientation.y = 1.0
+        above_pose.pose.orientation.z = 0.0
+        above_pose.pose.orientation.w = 0.0
+        return above_pose
+
     def run(self):
         rospy.spin()
 
