@@ -85,16 +85,15 @@ class Thrower:
 
 
     def _throw_multi_joint(self, joint_specs):
-        joint_specs = {joint: {"start_angle": 0, "limit_angle": 0, "release_angle": 0, "vel": 0}}
         joints = list(joint_specs.keys())
 
         def passed(cur_angle, limit, vel):
-            return math.sign(release_angle - angle) != math.sign(vel)
+            return np.sign(limit - cur_angle) != np.sign(vel)
 
         def should_release(angles): # Release if passed release_angle on any joint
             for joint, specs in joint_specs.items():
                 if "release_angle" in specs:
-                    if passed(angle[joint], specs["release_angle"], specs["vel"]):
+                    if passed(angles[joint], specs["release_angle"], specs["vel"]):
                         return True
             return False
 
@@ -108,7 +107,7 @@ class Thrower:
 
             # Stop if passed limit on any joint
             for joint in joints:
-                if passed(angles["joint"], joint_specs[joint]["limit_angle"], joint_specs[joint]["vel"]):
+                if passed(angles[joint], joint_specs[joint]["limit_angle"], joint_specs[joint]["vel"]):
                     self.limb.set_joint_velocities({joint_name: 0})
                     return released # True if successfully thrown, False if stopped early
 
@@ -147,7 +146,7 @@ class Thrower:
         aim_positions = {
             self.shoulder: shoulder_angle,
             self.throwing_elbow: joint_specs[self.throwing_elbow]["start_angle"],
-            self.throwingwrist: joint_specs[self.throwing_wrist]["start_angle"],
+            self.throwing_wrist: joint_specs[self.throwing_wrist]["start_angle"],
         }
 
         raw_input("Press [enter] to go to windup position:")
@@ -157,7 +156,7 @@ class Thrower:
 
         raw_input("Press [enter] to go to throw:")
         # success = self._throw(self.throwing_elbow, vel, limit_angle, release_angle)
-        success = self._throw_multi_joint(self, joint_specs)
+        success = self._throw_multi_joint(joint_specs)
 
         print("Final angles", self.limb.joint_angles())
 
