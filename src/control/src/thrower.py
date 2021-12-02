@@ -12,23 +12,17 @@ from baxter_interface import Limb
 from geometry_msgs.msg import PoseStamped
 from baxter_interface import gripper as robot_gripper
 
-STARTING_JOINT_POSITIONS = {'left_w0': 1.4024419353242394, 'left_w1': -0.08015049616701286, 'left_w2': -2.8785149484669788, 'left_e0': -3.05453924387683, 'left_e1': 1.6693545924163016, 'left_s0': 0.6093738679874806, 'left_s1': 0.054072822772960834}
-<<<<<<< HEAD
-TARGET_JOINT_POSITIONS = {'left_w0': 1.2816409482782631, 'left_w1': 0.1737233242280231, 'left_w2': -2.90152466028526, 'left_e0': -1.8461458782200955, 'left_e1': 1.6064613801129994, 'left_s0': 0.7202039799122018, 'left_s1': -0.05675728915176031}
-TARGET_JOINT_VELOCITY = {'left_w0': 0, 'left_w1': 0.3, 'left_w2': 0, 'left_e0': 0.8, 'left_e1': 0, 'left_s0': 0, 'left_s1': 0}
-RELEASE_ANGLE = -2.8
-=======
->>>>>>> 006d65789bbbe63c75a49e73802264f1b698a10d
+STARTING_JOINT_POSITIONS = {
+    'left_s0': 0.6093738679874806,
+    'left_s1': 0.054072822772960834,
+    'left_e0': -3.05453924387683,
+    'left_e1': 1.6693545924163016,
+    'left_w0': 1.4024419353242394,
+    'left_w1': -0.08015049616701286,
+    'left_w2': -2.8785149484669788,
+}
 JOINT_NAMES = ["left_s0", "left_s1", "left_e0", "left_e1", "left_w0", "left_w1", "left_w2"]
-# STARTING_JOINT_POSITIONS = {
-#     'left_s0': 0.6,
-#     'left_s1': 0,
-#     'left_e0': -pi,
-#     'left_e1': pi/2,
-#     'left_w0': pi/2,
-#     'left_w1': 0,
-#     'left_w2': -pi,
-# }
+
 
 class Thrower:
     def __init__(self):
@@ -48,11 +42,12 @@ class Thrower:
         self.throwing_elbow = 'left_e0'
         self.shoulder = 'left_s1'
         self.limb = Limb(self.arm)
-        self.loop_period = 0.01
         self.limb.set_command_timeout(self.loop_period*5) # ensure we don't timeout
         self.gripper = robot_gripper.Gripper(self.arm)
         print('Calibrating Gripper...')
         self.gripper.calibrate()
+
+        self.loop_period = 0.01
 
     def _setJointPositions(self, joint_positions, delta=0.1):
         def close_enough(delta, target):
@@ -84,19 +79,12 @@ class Thrower:
             self.limb.set_joint_velocities({joint_name: vel})
             rospy.sleep(self.loop_period)
 
-
-
     # Callback
     def throwBall(self, request):
         print("REQUEST TO THROW BALL")
         # get the position of the target in ?? coordinates (PoseStamped)
         target_pose = self.get_target_pose()
 
-<<<<<<< HEAD
-        # print(self.limb.joint_angles())
-        self._setJointPositions(STARTING_JOINT_POSITIONS)
-        self._throw(TARGET_JOINT_VELOCITY)
-=======
         self._setJointPositions(STARTING_JOINT_POSITIONS)
         print("Initial angles", self.limb.joint_angles())
 
@@ -118,7 +106,6 @@ class Thrower:
         print("Final angles", self.limb.joint_angles())
 
         return success
->>>>>>> 006d65789bbbe63c75a49e73802264f1b698a10d
 
     def run(self):
         rospy.spin()
