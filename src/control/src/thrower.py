@@ -2,7 +2,8 @@
 from EE106A_labs.lab3.src.forward_kinematics.src.forward_kinematics_node import callback
 import rospy
 import time
-from math import pi
+import math
+pi = math.pi
 
 from control.srv import ThrowBall
 from computer_vision.srv import GetTargetPose
