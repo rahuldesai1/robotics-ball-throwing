@@ -1,6 +1,8 @@
 #!/usr/bin/env python
+from EE106A_labs.lab3.src.forward_kinematics.src.forward_kinematics_node import callback
 import rospy
 import time
+from math import pi
 
 from control.srv import ThrowBall
 from computer_vision.srv import GetTargetPose
@@ -10,10 +12,22 @@ from geometry_msgs.msg import PoseStamped
 from baxter_interface import gripper as robot_gripper
 
 STARTING_JOINT_POSITIONS = {'left_w0': 1.4024419353242394, 'left_w1': -0.08015049616701286, 'left_w2': -2.8785149484669788, 'left_e0': -3.05453924387683, 'left_e1': 1.6693545924163016, 'left_s0': 0.6093738679874806, 'left_s1': 0.054072822772960834}
+<<<<<<< HEAD
 TARGET_JOINT_POSITIONS = {'left_w0': 1.2816409482782631, 'left_w1': 0.1737233242280231, 'left_w2': -2.90152466028526, 'left_e0': -1.8461458782200955, 'left_e1': 1.6064613801129994, 'left_s0': 0.7202039799122018, 'left_s1': -0.05675728915176031}
 TARGET_JOINT_VELOCITY = {'left_w0': 0, 'left_w1': 0.3, 'left_w2': 0, 'left_e0': 0.8, 'left_e1': 0, 'left_s0': 0, 'left_s1': 0}
 RELEASE_ANGLE = -2.8
+=======
+>>>>>>> 006d65789bbbe63c75a49e73802264f1b698a10d
 JOINT_NAMES = ["left_s0", "left_s1", "left_e0", "left_e1", "left_w0", "left_w1", "left_w2"]
+# STARTING_JOINT_POSITIONS = {
+#     'left_s0': 0.6,
+#     'left_s1': 0,
+#     'left_e0': -pi,
+#     'left_e1': pi/2,
+#     'left_w0': pi/2,
+#     'left_w1': 0,
+#     'left_w2': -pi,
+# }
 
 class Thrower:
     def __init__(self):
@@ -32,56 +46,78 @@ class Thrower:
         self.arm = 'left'
         self.throwing_elbow = 'left_e0'
         self.limb = Limb(self.arm)
+        self.loop_period = 0.01
+        self.limb.set_command_timeout(self.loop_period*5) # ensure we don't timeout
         self.gripper = robot_gripper.Gripper(self.arm)
         print('Calibrating Gripper...')
         self.gripper.calibrate()
 
-    def _setJointPositions(self, joint_positions):
+    def _setJointPositions(self, joint_positions, delta=0.1):
         def close_enough(delta, target):
-            for name in JOINT_NAMES:
+            for name in target:
                 if abs(self.limb.joint_angle(name) - target[name]) > delta:
                     return False
             return True
 
-        delta = 0.1
         while not close_enough(delta, joint_positions):
             self.limb.set_joint_positions(joint_positions)
-            time.sleep(0.01)
+            rospy.sleep(self.loop_period)
 
-    def _throw(self, joint_velocities):
-        def close_enough(delta, target):
-            return self.limb.joint_angle(self.throwing_elbow) > TARGET_JOINT_POSITIONS[self.throwing_elbow]
+    def _throw(self, joint_name, vel, limit_angle, release_angle):
+        released = False
+        while True:
+            angle = self.limb.joint_angle(joint_name)
 
-        def should_open_gripper():
-            return self.limb.joint_angle(self.throwing_elbow) > RELEASE_ANGLE
-
-        delta = 0.1
-        isOpen = False
-        while not close_enough(delta, joint_velocities):
-            self.limb.set_joint_velocities(joint_velocities)
-            if not isOpen and should_open_gripper():
+            # Release once reached release_angle
+            if not released and math.sign(release_angle - angle) == math.sign(vel):
                 self.gripper.open()
-                isOpen = True
+                released = True
 
-            time.sleep(0.01)
+            # Stop if passed limit
+            if math.sign(limit_angle - angle) == math.sign(vel):
+                self.limb.set_joint_velocities({joint_name: 0})
+                return released # True if successfully thrown, False if stopped early
+
+            # Set velocity
+            self.limb.set_joint_velocities({joint_name: vel})
+            rospy.sleep(self.loop_period)
+
+
 
     # Callback
     def throwBall(self, request):
         print("REQUEST TO THROW BALL")
         # get the position of the target in ?? coordinates (PoseStamped)
         target_pose = self.get_target_pose()
-        
-        # close gripper
-        print("Closing...")
-        self.gripper.close()
-        rospy.sleep(1.0)
 
+<<<<<<< HEAD
         # print(self.limb.joint_angles())
         self._setJointPositions(STARTING_JOINT_POSITIONS)
         self._throw(TARGET_JOINT_VELOCITY)
+=======
+        self._setJointPositions(STARTING_JOINT_POSITIONS)
+        print("Initial angles", self.limb.joint_angles())
 
-        return True
-      
+        # calculate from target_pose. should target_pose be in request?
+        goal_direction = 0.6
+        start_angle = -2
+        limit_angle = -pi/2
+        release_angle = -2.8
+        vel = 1
+
+        aim_positions = {
+            self.base_joint: goal_direction,
+            self.throwing_elbow: start_angle
+        }
+        self._setJointPositions(aim_positions)
+        print("Windup angles", self.limb.joint_angles())
+
+        success = self._throw(self.throwing_elbow, vel, limit_angle, release_angle)
+        print("Final angles", self.limb.joint_angles())
+
+        return success
+>>>>>>> 006d65789bbbe63c75a49e73802264f1b698a10d
+
     def run(self):
         rospy.spin()
 
