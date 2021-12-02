@@ -46,6 +46,7 @@ class Thrower:
         # define robot attributes
         self.arm = 'left'
         self.throwing_elbow = 'left_e0'
+        self.shoulder = 'left_s1'
         self.limb = Limb(self.arm)
         self.loop_period = 0.01
         self.limb.set_command_timeout(self.loop_period*5) # ensure we don't timeout
@@ -100,14 +101,14 @@ class Thrower:
         print("Initial angles", self.limb.joint_angles())
 
         # calculate from target_pose. should target_pose be in request?
-        goal_direction = 0.6
+        shoulder_angle = 0.6 # depends on angle to goal in x-y plane
         start_angle = -2
         limit_angle = -pi/2
         release_angle = -2.8
         vel = 1
 
         aim_positions = {
-            self.base_joint: goal_direction,
+            self.shoulder: goal_direction,
             self.throwing_elbow: start_angle
         }
         self._setJointPositions(aim_positions)
