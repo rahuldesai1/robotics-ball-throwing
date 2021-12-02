@@ -58,7 +58,9 @@ class Picker:
             group.set_pose_target(request.ik_request.pose_stamped)
 
             # Plan IK and execute
-            group.go()
+            group.go() # synchronous
+
+            group.stop()
 
         except rospy.ServiceException as e:
             print("Service call failed: %s"%e)

@@ -9,7 +9,6 @@
 **Note: Run all of the below commands after ssh'ing into the robot with `./baxter.sh ayrton.local`** 
 
 2. Launch move-it related services
-`roslaunch ik move_group.launch`
 `rosrun tf static_transform_publisher 0 0 0 0 0 0 world base 100`
 `rosrun baxter_interface joint_trajectory_action_server.py`
 `roslaunch baxter_moveit_config demo_baxter.launch right_electric_gripper:=true left_electric_gripper:=true`
