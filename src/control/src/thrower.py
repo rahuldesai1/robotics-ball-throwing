@@ -36,6 +36,8 @@ class Thrower:
         # Create the function used to get the position of the ball
         self.get_target_pose = rospy.ServiceProxy('target_pose', GetTargetPose)
 
+        self.loop_period = 0.01
+
         # define robot attributes
         self.arm = 'left'
         self.throwing_elbow = 'left_e0'
@@ -46,7 +48,7 @@ class Thrower:
         print('Calibrating Gripper...')
         self.gripper.calibrate()
 
-        self.loop_period = 0.01
+        
 
     def _setJointPositions(self, joint_positions, delta=0.1):
         def close_enough(delta, target):
@@ -89,7 +91,7 @@ class Thrower:
 
         # calculate from target_pose. should target_pose be in request?
         shoulder_angle = 0.6 # depends on angle to goal in x-y plane
-        start_angle = -2
+        start_angle = -3
         limit_angle = -pi/2
         release_angle = -2.8
         vel = 1

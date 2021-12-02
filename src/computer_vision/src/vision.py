@@ -22,7 +22,7 @@ class Vision:
         mocked_result = PoseStamped()
         mocked_result.pose.position.x = 0.590
         mocked_result.pose.position.y = 0.288
-        mocked_result.pose.position.z = -0.179
+        mocked_result.pose.position.z = -0.149
         return mocked_result
 
     # Callback 2

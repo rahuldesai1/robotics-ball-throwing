@@ -67,7 +67,7 @@ class Picker:
     def pickBall(self, request):
         print("REQUEST TO PICK UP BALL")
         # get the position of the ball in ?? coordinates
-        ball_pose = self.get_ball_pose()
+        ball_pose = self.get_ball_pose().ball_pose
         above_pose = self.getPoseAbove(ball_pose)
 
         # use move it to compute IK and orient the end effector
