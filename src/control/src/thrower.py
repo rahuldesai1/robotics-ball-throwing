@@ -48,8 +48,6 @@ class Thrower:
         print('Calibrating Gripper...')
         self.gripper.calibrate()
 
-        
-
     def _setJointPositions(self, joint_positions):
         def close_enough(delta, target):
             for name in JOINT_NAMES:
