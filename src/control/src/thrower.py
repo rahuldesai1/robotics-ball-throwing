@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from EE106A_labs.lab3.src.forward_kinematics.src.forward_kinematics_node import callback
 import rospy
 import time
 import math
@@ -96,7 +95,7 @@ class Thrower:
         vel = 1
 
         aim_positions = {
-            self.shoulder: goal_direction,
+            self.shoulder: shoulder_angle,
             self.throwing_elbow: start_angle
         }
         self._setJointPositions(aim_positions)
