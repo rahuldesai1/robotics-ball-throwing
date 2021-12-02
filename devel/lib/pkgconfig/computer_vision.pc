@@ -3,6 +3,6 @@ prefix=/home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwi
 Name: computer_vision
 Description: Description of computer_vision
 Version: 0.0.0
-Cflags: 
+Cflags: -I/home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/devel/include
 Libs: -L${prefix}/lib 
 Requires: 

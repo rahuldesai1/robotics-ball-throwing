@@ -2,7 +2,7 @@
 import rospy
 
 from control.srv import PickUpBall
-# from computer_vision.srv import GetBallPose
+from computer_vision.srv import GetBallPose
 
 from moveit_msgs.srv import GetPositionIK, GetPositionIKRequest, GetPositionIKResponse
 from geometry_msgs.msg import PoseStamped
@@ -12,7 +12,7 @@ from baxter_interface import gripper as robot_gripper
 class Picker:
     def __init__(self):
         # Wait for the dependent services to become available
-        # rospy.wait_for_service('ball_pose')
+        rospy.wait_for_service('ball_pose')
 
         # Initialize the node
         rospy.init_node('picker_listener')
@@ -20,12 +20,7 @@ class Picker:
         rospy.Service('picker', PickUpBall, self.pickBall)
 
         # Create the function used to get the position of the ball
-        # self.get_ball_pose = rospy.ServiceProxy('ball_pose', GetBallPose)
-        mocked_result = PoseStamped()
-        mocked_result.pose.position.x = 0.590
-        mocked_result.pose.position.y = 0.288
-        mocked_result.pose.position.z = -0.179
-        self.get_ball_pose = lambda: mocked_result
+        self.get_ball_pose = rospy.ServiceProxy('ball_pose', GetBallPose)
         self.compute_ik = rospy.ServiceProxy('compute_ik', GetPositionIK)
 
         self.arm = 'left'
@@ -44,7 +39,6 @@ class Picker:
         request.ik_request.pose_stamped.header.frame_id = "base"
 
         # Set the desired orientation for the end effector to target, will have to tune this
-        # TODO
         request.ik_request.pose_stamped.pose.position.x = target.pose.position.x
         request.ik_request.pose_stamped.pose.position.y = target.pose.position.y
         request.ik_request.pose_stamped.pose.position.z = target.pose.position.z

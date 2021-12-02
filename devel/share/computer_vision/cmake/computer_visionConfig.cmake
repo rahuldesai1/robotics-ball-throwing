@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(computer_vision_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT " " STREQUAL " ")
+if(NOT "/home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/devel/include " STREQUAL " ")
   set(computer_vision_INCLUDE_DIRS "")
-  set(_include_dirs "")
+  set(_include_dirs "/home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/devel/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/devel/lib;/home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/devel/lib;/scratch/shared/baxter_ws/devel/lib;/opt/ros/kinetic/lib)
+    foreach(path /home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/devel/lib;/scratch/shared/baxter_ws/devel/lib;/opt/ros/kinetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -177,7 +177,7 @@ foreach(library ${libraries})
   endif()
 endforeach()
 
-set(computer_vision_EXPORTED_TARGETS "")
+set(computer_vision_EXPORTED_TARGETS "computer_vision_generate_messages_cpp;computer_vision_generate_messages_eus;computer_vision_generate_messages_lisp;computer_vision_generate_messages_nodejs;computer_vision_generate_messages_py")
 # create dummy targets for exported code generation targets to make life of users easier
 foreach(t ${computer_vision_EXPORTED_TARGETS})
   if(NOT TARGET ${t})
@@ -214,7 +214,7 @@ foreach(depend ${depends})
   list(APPEND computer_vision_EXPORTED_TARGETS ${${computer_vision_dep}_EXPORTED_TARGETS})
 endforeach()
 
-set(pkg_cfg_extras "")
+set(pkg_cfg_extras "computer_vision-msg-extras.cmake")
 foreach(extra ${pkg_cfg_extras})
   if(NOT IS_ABSOLUTE ${extra})
     set(extra ${computer_vision_DIR}/${extra})

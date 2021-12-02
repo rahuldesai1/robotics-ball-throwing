@@ -3,7 +3,7 @@ import rospy
 import time
 
 from control.srv import ThrowBall
-# from computer_vision.srv import GetTargetPose
+from computer_vision.srv import GetTargetPose
 
 from baxter_interface import Limb
 from geometry_msgs.msg import PoseStamped
@@ -11,14 +11,14 @@ from baxter_interface import gripper as robot_gripper
 
 STARTING_JOINT_POSITIONS = {'left_w0': 1.4024419353242394, 'left_w1': -0.08015049616701286, 'left_w2': -2.8785149484669788, 'left_e0': -3.05453924387683, 'left_e1': 1.6693545924163016, 'left_s0': 0.6093738679874806, 'left_s1': 0.054072822772960834}
 TARGET_JOINT_POSITIONS = {'left_w0': 1.2816409482782631, 'left_w1': 0.1737233242280231, 'left_w2': -2.90152466028526, 'left_e0': -1.8461458782200955, 'left_e1': 1.6064613801129994, 'left_s0': 0.7202039799122018, 'left_s1': -0.05675728915176031}
-TARGET_JOINT_VELOCITY = {'left_w0': 0, 'left_w1': 0, 'left_w2': 0, 'left_e0': 2, 'left_e1': 0, 'left_s0': 0, 'left_s1': 0}
+TARGET_JOINT_VELOCITY = {'left_w0': 0, 'left_w1': 0.3, 'left_w2': 0, 'left_e0': 0.8, 'left_e1': 0, 'left_s0': 0, 'left_s1': 0}
 RELEASE_ANGLE = -2.8
 JOINT_NAMES = ["left_s0", "left_s1", "left_e0", "left_e1", "left_w0", "left_w1", "left_w2"]
 
 class Thrower:
     def __init__(self):
         # Wait for the dependent services to become available
-        # rospy.wait_for_service('target_pose')
+        rospy.wait_for_service('target_pose')
 
         # Initialize the node
         rospy.init_node('thrower_listener')
@@ -26,12 +26,7 @@ class Thrower:
         rospy.Service('thrower', ThrowBall, self.throwBall)
 
         # Create the function used to get the position of the ball
-        # self.get_target_pose = rospy.ServiceProxy('target_pose', GetTargetPose)
-        mocked_result = PoseStamped()
-        mocked_result.pose.position.x = 0.000
-        mocked_result.pose.position.y = 0.000
-        mocked_result.pose.position.z = 0.000
-        self.get_target_pose = lambda: mocked_result
+        self.get_target_pose = rospy.ServiceProxy('target_pose', GetTargetPose)
 
         # define robot attributes
         self.arm = 'left'
@@ -81,9 +76,9 @@ class Thrower:
         self.gripper.close()
         rospy.sleep(1.0)
 
-        print(self.limb.joint_angles())
-        # self._setJointPositions(STARTING_JOINT_POSITIONS)
-        # self._throw(TARGET_JOINT_VELOCITY)
+        # print(self.limb.joint_angles())
+        self._setJointPositions(STARTING_JOINT_POSITIONS)
+        self._throw(TARGET_JOINT_VELOCITY)
 
         return True
       
