@@ -62,37 +62,26 @@ class Thrower:
             self.limb.set_joint_positions(joint_positions)
             time.sleep(0.01)
 
-    def constantJointVel(self, joint_name, vel, limit_angle, release_angle, callback):
-        passed_callback = False
-        angle = self.limb.joint_angle(joint_name)
+    def _throw(self, joint_name, vel, limit_angle, release_angle):
+        released = False
         while True:
-            if not passed_callback and math.sign(release_angle - angle) == math.sign(vel):
-                passed_callback = True
-                callback()
-            if math.sign(limit_angle - angle) != math.sign(vel):
-                self.limb.set_joint_velocities({joint_name: 0})
-                return
-            self.limb.set_joint_velocities({joint_name: vel})
-            time.sleep(self.loop_period)
             angle = self.limb.joint_angle(joint_name)
 
-
-    def _throw(self, joint_velocities):
-        def close_enough(delta, target):
-            return self.limb.joint_angle(self.throwing_elbow) > TARGET_JOINT_POSITIONS[self.throwing_elbow]
-
-        def should_open_gripper():
-            return self.limb.joint_angle(self.throwing_elbow) > RELEASE_ANGLE
-
-        delta = 0.1
-        isOpen = False
-        while not close_enough(delta, joint_velocities):
-            self.limb.set_joint_velocities(joint_velocities)
-            if not isOpen and should_open_gripper():
+            # Release once reached release_angle
+            if not released and math.sign(release_angle - angle) == math.sign(vel):
                 self.gripper.open()
-                isOpen = True
+                released = True
 
-            time.sleep(0.01)
+            # Stop if passed limit
+            if math.sign(limit_angle - angle) == math.sign(vel):
+                self.limb.set_joint_velocities({joint_name: 0})
+                return released # True if successfully thrown, False if stopped early
+
+            # Set velocity
+            self.limb.set_joint_velocities({joint_name: vel})
+            rospy.sleep(self.loop_period)
+
+
 
     # Callback
     def throwBall(self, request):
@@ -119,24 +108,13 @@ class Thrower:
         open_gripper = lambda: None
 
 
-
         self._setJointPositions(starting_positions)
-        self.constantJointVel(moving_joint, vel, limit_angle, release_angle, callback=self.gripper.open)
+        print("Initial angles", self.limb.joint_angles())
+        success = self._throw(moving_joint, vel, limit_angle, release_angle)
+        print("Final angles", self.limb.joint_angles())
 
-        # self._setJointVelocities(TARGET_JOINT_VELOCITY)
-        
-        # self._moveArmToTarget(target_pose)
-        # close gripper
-        print("Closing...")
-        self.gripper.close()
-        rospy.sleep(1.0)
+        return success
 
-        print(self.limb.joint_angles())
-        # self._setJointPositions(STARTING_JOINT_POSITIONS)
-        # self._throw(TARGET_JOINT_VELOCITY)
-
-        return True
-      
     def run(self):
         rospy.spin()
 
