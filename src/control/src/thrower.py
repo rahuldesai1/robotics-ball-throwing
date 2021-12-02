@@ -41,6 +41,7 @@ class Thrower:
         # define robot attributes
         self.arm = 'left'
         self.throwing_elbow = 'left_e0'
+        self.throwing_wrist = 'left_w1'
         self.shoulder = 'left_s1'
         self.limb = Limb(self.arm)
         self.limb.set_command_timeout(self.loop_period*5) # ensure we don't timeout
@@ -80,6 +81,40 @@ class Thrower:
             self.limb.set_joint_velocities({joint_name: vel})
             rospy.sleep(self.loop_period)
 
+
+    def _throw_multi_joint(self, joint_specs):
+        joint_specs = {joint: {"start_angle": 0, "limit_angle": 0, "release_angle": 0, "vel": 0}}
+        joints = list(joint_specs.keys())
+
+        def passed(cur_angle, limit, vel):
+            return math.sign(release_angle - angle) != math.sign(vel)
+
+        def should_release(angles): # Release if passed release_angle on any joint
+            for joint, specs in joint_specs.items():
+                if "release_angle" in specs:
+                    if passed(angle[joint], specs["release_angle"], specs["vel"]):
+                        return True
+            return False
+
+        released = False
+        while True:
+            angles = {joint: self.limb.joint_angle(joint) for joint in joints}
+
+            if not released and should_release(angles):
+                self.gripper.open()
+                released = True
+
+            # Stop if passed limit on any joint
+            for joint in joints:
+                if passed(angles["joint"], joint_specs[joint]["limit_angle"], joint_specs[joint]["vel"]):
+                    self.limb.set_joint_velocities({joint_name: 0})
+                    return released # True if successfully thrown, False if stopped early
+
+            # Set velocity
+            self.limb.set_joint_velocities({joint: specs["vel"] for joint, specs in joint_specs.items()})
+            rospy.sleep(self.loop_period)
+
+
     # Callback
     def throwBall(self, request):
         print("REQUEST TO THROW BALL")
@@ -91,19 +126,23 @@ class Thrower:
 
         # calculate from target_pose. should target_pose be in request?
         shoulder_angle = 0.6 # depends on angle to goal in x-y plane
-        start_angle = -3
-        limit_angle = -pi/2
-        release_angle = -2.8
-        vel = 1
-
-        aim_positions = {
-            self.shoulder: shoulder_angle,
-            self.throwing_elbow: start_angle
+        # start_angle = -3
+        # limit_angle = -pi/2
+        # release_angle = -2.8
+        # vel = 1
+        throwing_joints = [self.shoulder, self.throwing_elbow]
+        joint_specs = {
+            self.throwing_elbow: {"start_angle": -3, "limit_angle": -pi/2, "release_angle": -2.8, "vel": 1},
+            self.throwing_wrist: {"start_angle": -pi/4, "limit_angle": pi/2, "release_angle": 0.2, "vel": 1}
         }
+
+        aim_positions = {joint: joint_specs[joint]["start_angle"] for joint in throwing_joints}
+        aim_positions[self.shoulder] = shoulder_angle
         self._setJointPositions(aim_positions)
         print("Windup angles", self.limb.joint_angles())
 
-        success = self._throw(self.throwing_elbow, vel, limit_angle, release_angle)
+        # success = self._throw(self.throwing_elbow, vel, limit_angle, release_angle)
+        success = self._throw_multi_joint(self, joint_specs)
         print("Final angles", self.limb.joint_angles())
 
         return success
