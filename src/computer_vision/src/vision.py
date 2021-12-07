@@ -31,6 +31,8 @@ class Vision:
         cv_img = bridge.imgmsg_to_cv2(image_msg, 'bgr8')
         img = np.array(cv_img)
         center, radius = ball_detection(img)
+        if not center:
+            return None
         pose = ball_pose_estimation(center)
         output = PoseStamped()
         output.pose.position.x = pose[0]
