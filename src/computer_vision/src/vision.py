@@ -15,6 +15,7 @@ class Vision:
         # Create the service
         rospy.Service('ball_pose', GetBallPose, self.localizeBall)
         rospy.Service('target_pose', GetTargetPose, self.localizeTarget)
+        print("Service Initialized")
 
     # Callback 1
     def localizeBall(self, request):
