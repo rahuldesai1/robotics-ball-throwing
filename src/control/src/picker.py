@@ -28,6 +28,9 @@ class Picker:
         print('Calibrating Gripper...')
         self.gripper.calibrate()
 
+        print("Service Initialized")
+
+
     def _moveArmToTarget(self, target):
         request = GetPositionIKRequest()
         request.ik_request.group_name = self.arm + "_arm"
@@ -62,6 +65,10 @@ class Picker:
 
             group.stop()
 
+            group.clear_pose_targets()
+            group.forget_joint_values(self.arm + "_arm")
+
+        
         except rospy.ServiceException as e:
             print("Service call failed: %s"%e)
 

@@ -52,6 +52,9 @@ class Thrower:
 
         print(self.limb.joint_angles())
 
+        print("Service Initialized")
+
+
     def _setJointPositions(self, joint_positions, delta=0.1):
         def close_enough(delta, target):
             for name in target:
@@ -108,7 +111,7 @@ class Thrower:
             # Stop if passed limit on any joint
             for joint in joints:
                 if passed(angles[joint], joint_specs[joint]["limit_angle"], joint_specs[joint]["vel"]):
-                    self.limb.set_joint_velocities({joint_name: 0})
+                    self.limb.set_joint_velocities({joint: 0 for join in joint_specs})
                     return released # True if successfully thrown, False if stopped early
 
             # Set velocity
@@ -128,16 +131,16 @@ class Thrower:
         time.sleep(1.5)
 
         # calculate from target_pose. should target_pose be in request?
-        shoulder_angle = 0.5 # depends on angle to goal in x-y plane
+        shoulder_angle = -0.2 # depends on angle to goal in x-y plane
         start_elbow_angle = -3.05 # max angle, dont go further than -3
         wrist_angle = -pi/4
 
         limit_angle = -pi/2
         release_angle = -2.8
-        vel = 1
+
         joint_specs = {
-            self.throwing_elbow: {"start_angle": -3, "limit_angle": -pi/2, "release_angle": -2.8, "vel": 1},
-            self.throwing_wrist: {"start_angle": -pi/4, "limit_angle": pi/2, "release_angle": 0.2, "vel": 1}
+            self.throwing_elbow: {"start_angle": -3.05, "limit_angle": -pi/2, "release_angle": -2.7, "vel": 0.5},
+            self.throwing_wrist: {"start_angle": -3*pi/8, "limit_angle": pi/2, "vel": 0.5}
         }
 
         # aim_positions = {joint: joint_specs[joint]["start_angle"] for joint in throwing_joints}
