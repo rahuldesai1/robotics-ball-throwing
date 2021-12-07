@@ -3,6 +3,7 @@ import rospy
 
 from cv_bridge import CvBridge
 import cv2
+import numpy as np
 
 from computer_vision.srv import GetBallPose
 from computer_vision.srv import GetTargetPose
@@ -28,8 +29,9 @@ class Vision:
         print("REQUEST FOR BALL POSE")
         img_msg = rospy.wait_for_message("/cameras/left_hand_camera/image", Image)
         bridge = CvBridge()
-        cv_img = bridge.imgmsg_to_cv2(image_msg, 'bgr8')
+        cv_img = bridge.imgmsg_to_cv2(img_msg, 'rgb8')
         img = np.array(cv_img)
+        print(img.shape)
         center, radius = ball_detection(img)
         if not center:
             return None
