@@ -4,8 +4,21 @@ import rospy
 from control.srv import PickUpBall, ThrowBall
 
 from baxter_interface import gripper as robot_gripper
+from baxter_interface import Limb
 
-
+def return_to_base():
+    angles = [-0.05138835639416136, -0.6412039693361029,-1.6908303234466973, 0.9618059540041545, 1.1006312153077844, 2.0056798801601783, -0.25349032519806464]
+    angle_dict = {}
+    left = baxter_interface.Limb('left')
+    lj = left.joint_names()
+    for i in range(len(lj)):
+        angle_dict[lj[i]] = angles[i]
+    current_angles = left.joint_angles()
+    while not diff(current_angles, angles) < 0.05:
+        left.set_joint_positions(angle_dict)
+        rospy.sleep(0.01)
+        current_angles = left.joint_angles()
+    return True
 
 def main():
     # Wait for the services to become available
@@ -30,7 +43,8 @@ def main():
         try:
             if char == 'p':
                 # Send the request to pick up the ball
-                success = pick_up()
+                success = return_to_base()
+                success = pick_up() and success
                 if not success:
                     print("Service call failed")
                     continue
