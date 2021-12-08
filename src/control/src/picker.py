@@ -28,6 +28,8 @@ class Picker:
         print('Calibrating Gripper...')
         self.gripper.calibrate()
 
+        self.group = MoveGroupCommander(self.arm + "_arm")
+
     def _moveArmToTarget(self, target):
         request = GetPositionIKRequest()
         request.ik_request.group_name = self.arm + "_arm"
@@ -49,19 +51,16 @@ class Picker:
 
         try:
             # Send the request to the service
-            response = self.compute_ik(request)
-
-            # Print the response HERE
-            group = MoveGroupCommander(self.arm + "_arm")
+            # response = self.compute_ik(request)
 
             # Setting position and orientation target
-            group.set_pose_target(request.ik_request.pose_stamped)
+            self.group.set_pose_target(request.ik_request.pose_stamped)
 
             # Plan IK and execute
-            group.go(wait=True) # synchronous
+            self.group.go(wait=True) # synchronous
 
-            group.stop()
-            group.clear_pose_targets()
+            self.group.stop()
+            self.group.clear_pose_targets()
 
         except rospy.ServiceException as e:
             print("Service call failed: %s"%e)
