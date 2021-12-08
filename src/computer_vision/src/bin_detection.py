@@ -4,13 +4,16 @@ import cv2
 import matplotlib.pyplot as plt
 from PIL import Image
 
+MAX_CONTOUR_AREA = 2000
+MIN_CONTOUR_AREA = 500
+
 def bin_detection(im):
     """
     im - RGB image numpy array
     """
     # define the lower and upper boundaries of the green ball in the HSV color space
-    lower_boundary = (36, 0, 0)
-    upper_boundary = (70, 255,255)
+    lower_boundary = (0, 0, 125)
+    upper_boundary = (255, 255,255)
 
     # blur image
     blurred_im = cv2.GaussianBlur(im, (11, 11), 0)
@@ -25,12 +28,25 @@ def bin_detection(im):
 
     contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
     pixel = None
-    if len(contours) > 0:
+
+    filtered_contours = []
+    for contour in contours:
+        print(cv2.contourArea(contour))
+        if MIN_CONTOUR_AREA <= cv2.contourArea(contour) <= MAX_CONTOUR_AREA:
+            filtered_contours.append(contour)
+    #filtered_contours = list(filter(lambda c: MIN_CONTOUR_AREA <= cv2.contourArea(c) <= MAX_CONTOUR_AREA, contours))
+
+    # cv2.drawContours(im, filtered_contours, -1, (0,255,0), 3)
+    # cv2.imshow('Output', im)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+
+    if len(filtered_contours) > 0:
         # find the largest contour in the mask
-        max_contour = max(contours, key=cv2.contourArea)
+        max_contour = max(filtered_contours, key=cv2.contourArea)
         right_edge, left_edge = np.max(max_contour[:,0]), np.min(max_contour[:,1])
         center_x = (right_edge + left_edge) / 2
-        pxl = point_below(max_contour, center_x)
+        pixel = point_below(max_contour, center_x)
 
     return pixel
 
@@ -80,4 +96,11 @@ def bin_cartesian_to_polar(pose, reference):
     angle = np.atan2(xy_vec[1], xy_vec[0])
     distance = np.linalg.norm(xy_vec)
     return angle, distance
+
+if __name__ == "__main__":
+    img = np.array(Image.open("../../../bin_images/bin_1.png"))
+    pixel = bin_detection(img)
+    plt.imshow(img)
+    plt.plot([pixel[1]], [pixel[0]])
+    plt.show()
 
