@@ -1,0 +1,12 @@
+<launch>
+    <node pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 world base 100"/>
+    <node pkg="baxter_interface" type="joint_trajectory_action_server.py"/>
+    <include ns="move_group" file="$(find baxter_moveit_config)/launch/demo_baxter.launch">
+        <arg name="right_electric_gripper" value="true" />
+        <arg name="left_electric_gripper" value="true" />
+    </include>
+
+    <node pkg="computer_vision" type="vision.py"/>
+    <node pkg="control" type="picker.py"/>
+    <node pkg="control" type="thrower.py"/>
+</launch>
