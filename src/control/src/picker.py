@@ -49,21 +49,17 @@ class Picker:
         request.ik_request.pose_stamped.pose.orientation.z = 0.0
         request.ik_request.pose_stamped.pose.orientation.w = 0.0
 
-        try:
-            # Send the request to the service
-            # response = self.compute_ik(request)
+        # Send the request to the service
+        # response = self.compute_ik(request)
+        # Setting position and orientation target
+        self.group.set_pose_target(request.ik_request.pose_stamped)
 
-            # Setting position and orientation target
-            self.group.set_pose_target(request.ik_request.pose_stamped)
+        # Plan IK and execute
+        self.group.go(wait=True) # synchronous
 
-            # Plan IK and execute
-            self.group.go(wait=True) # synchronous
+        self.group.stop()
+        self.group.clear_pose_targets()
 
-            self.group.stop()
-            self.group.clear_pose_targets()
-
-        except rospy.ServiceException as e:
-            print("Service call failed: %s"%e)
 
     # Callback
     def pickBall(self, request):
