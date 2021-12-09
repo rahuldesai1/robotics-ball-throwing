@@ -37,10 +37,10 @@ def bin_detection(im):
         right_edge, left_edge = np.max(max_contour[:,0]), np.min(max_contour[:,0])
         center_x = (right_edge + left_edge) / 2
         pixel = point_ontop(max_contour, center_x)
-    plt.plot(pixel[0], pixel[1], color='red', markersize=7, marker = 'o')
-    plt.imshow(img)
-    plt.show() 
-    print(pixel[1])
+    #plt.plot(pixel[0], pixel[1], color='red', markersize=7, marker = 'o')
+    #plt.imshow(img)
+    #plt.show() 
+    #print(pixel[1])
     return pixel
 
 def point_ontop(contour, x_coord):
@@ -57,7 +57,7 @@ def point_ontop(contour, x_coord):
 
 
 def calculate_distance(pixel):
-    distance = -0.73170731707317     * pixel[1] + 157.80487804878
+    distance = -0.73170731707317 * pixel[1] + 157.80487804878
     return distance 
 
 def calculate_angle(pixel):
@@ -109,6 +109,6 @@ if __name__ == "__main__":
     #plt.imshow(img)
     #plt.plot([pixel[1]], [pixel[0]])
     #plt.show()
-    print(distance)
+    #print(distance)
     #print(angle)
 
