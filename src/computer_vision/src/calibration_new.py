@@ -69,10 +69,10 @@ ret, matrix, distortion, r_vecs, t_vecs = cv2.calibrateCamera(
 
 Lcam = matrix.dot(np.hstack((cv2.Rodrigues(r_vecs[0])[0],t_vecs[0])))
 
-np.savez("intrinsics",
-    matrix=matrix, distortion=distortion,
-    r_vecs=r_vecs, t_vecs=t_vecs, Lcam=Lcam,
-    obj_points=obj_points, img_points=img_points)
+# np.savez("intrinsics",
+#     matrix=matrix, distortion=distortion,
+#     r_vecs=r_vecs, t_vecs=t_vecs, Lcam=Lcam,
+#     obj_points=obj_points, img_points=img_points)
 
 # 7.4 in x 9.7 in
 # 8 x 11 squares
