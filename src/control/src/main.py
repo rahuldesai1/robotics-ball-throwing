@@ -35,6 +35,7 @@ def return_to_base(left):
         left.set_joint_positions(angle_dict)
         rospy.sleep(0.01)
         current_angles = left.joint_angles()
+    return True
 
 def _setJointPositions(limb, joint_positions, delta=0.1):
     def close_enough(delta, target):
@@ -94,7 +95,7 @@ def main():
                 print(resp.pixel_height, resp.pixel_width)
                 target_pose = resp
             elif char == 'p':
-                return_to_base(left)
+                success = return_to_base(left)
                 time.sleep(1.5)
                 success = pick_up() and success
                 if not success:
