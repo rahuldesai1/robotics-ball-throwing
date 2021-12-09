@@ -116,16 +116,17 @@ class Thrower:
             rospy.sleep(self.loop_period)
 
     def _getShouldAngleFromTargetPose(self, target_pose):
-        return 0.5
+        return -0.27
 
     def _getVelocityFromTargetPose(self, target_pose):
-        return 1
+        return 3, False
 
     # Callback
     def throwBall(self, request):
         print("REQUEST TO THROW BALL")
         # get the position of the target in world coordinates
-        target_pose = request.target_pose
+        #target_pose = request.target_pose
+        target_pose = None
 
         # raw_input("Press [enter] to go to starting position:")
         self._setJointPositions(STARTING_JOINT_POSITIONS)
@@ -134,17 +135,28 @@ class Thrower:
 
         # calculate from target_pose. should target_pose be in request?
         shoulder_angle = self._getShouldAngleFromTargetPose(target_pose)
-        velocity = self._getVelocityFromTargetPose(target_pose)
-        joint_specs = {
-            self.throwing_elbow: {"start_angle": -3.05, "limit_angle": -pi/2, "release_angle": -2.7, "vel": velocity},
-            self.throwing_wrist: {"start_angle": -3*pi/8, "limit_angle": pi/2, "vel": velocity}
-        }
+        velocity, wrist_only = self._getVelocityFromTargetPose(target_pose)
 
-        aim_positions = {
-            self.shoulder: shoulder_angle,
-            self.throwing_elbow: joint_specs[self.throwing_elbow]["start_angle"],
-            self.throwing_wrist: joint_specs[self.throwing_wrist]["start_angle"],
-        }
+        if not wrist_only:
+            joint_specs = {
+                self.throwing_elbow: {"start_angle": -3.05, "limit_angle": -pi/2, "release_angle": -2.7, "vel": velocity},
+                self.throwing_wrist: {"start_angle": -3*pi/8, "limit_angle": pi/2, "vel": velocity}
+            }
+            aim_positions = {
+                self.shoulder: shoulder_angle,
+                self.throwing_elbow: joint_specs[self.throwing_elbow]["start_angle"],
+                self.throwing_wrist: joint_specs[self.throwing_wrist]["start_angle"],
+            }
+        else:
+            joint_specs = {
+                self.throwing_wrist: {"start_angle": -3*pi/8, "limit_angle": pi/2, "release_angle": 0, "vel": velocity}
+            }
+
+            aim_positions = {
+                self.shoulder: shoulder_angle,
+                self.throwing_elbow: -3.05,
+                self.throwing_wrist: joint_specs[self.throwing_wrist]["start_angle"],
+            }
 
         # raw_input("Press [enter] to go to windup position:")
         self._setJointPositions(aim_positions)

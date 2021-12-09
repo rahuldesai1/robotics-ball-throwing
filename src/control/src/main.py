@@ -96,9 +96,9 @@ def main():
                     print("Service call failed")
                     continue
             elif char == 't':
-                if target_pose is None:
-                    print("Must find the target before throwing")
-                    continue
+                #if target_pose is None:
+                #    print("Must find the target before throwing")
+                #    continue
                 success = throw(target_pose)
                 if not success:
                     print("Service call failed")
