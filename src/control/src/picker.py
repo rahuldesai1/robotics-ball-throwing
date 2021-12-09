@@ -29,6 +29,7 @@ class Picker:
         self.gripper.calibrate()
 
         self.group = MoveGroupCommander(self.arm + "_arm")
+        print("Service Initialized")
 
     def _moveArmToTarget(self, target):
         request = GetPositionIKRequest()
@@ -59,7 +60,6 @@ class Picker:
 
         self.group.stop()
         self.group.clear_pose_targets()
-
 
     # Callback
     def pickBall(self, request):
