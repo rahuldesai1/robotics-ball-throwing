@@ -28,6 +28,9 @@ class Picker:
         print('Calibrating Gripper...')
         self.gripper.calibrate()
 
+        self.group = MoveGroupCommander(self.arm + "_arm")
+        print("Service Initialized")
+
     def _moveArmToTarget(self, target):
         request = GetPositionIKRequest()
         request.ik_request.group_name = self.arm + "_arm"
@@ -47,23 +50,16 @@ class Picker:
         request.ik_request.pose_stamped.pose.orientation.z = 0.0
         request.ik_request.pose_stamped.pose.orientation.w = 0.0
 
-        try:
-            # Send the request to the service
-            response = self.compute_ik(request)
+        # Send the request to the service
+        # response = self.compute_ik(request)
+        # Setting position and orientation target
+        self.group.set_pose_target(request.ik_request.pose_stamped)
 
-            # Print the response HERE
-            group = MoveGroupCommander(self.arm + "_arm")
+        # Plan IK and execute
+        self.group.go(wait=True) # synchronous
 
-            # Setting position and orientation target
-            group.set_pose_target(request.ik_request.pose_stamped)
-
-            # Plan IK and execute
-            group.go() # synchronous
-
-            group.stop()
-
-        except rospy.ServiceException as e:
-            print("Service call failed: %s"%e)
+        self.group.stop()
+        self.group.clear_pose_targets()
 
     # Callback
     def pickBall(self, request):

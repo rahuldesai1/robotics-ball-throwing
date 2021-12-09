@@ -23,7 +23,7 @@ def ball_detection(im):
     # restore cluster mass after erosion
     mask = cv2.dilate(mask, None, iterations=2)
 
-    contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+    contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
     center = None
     radius = None
     if len(contours) > 0:
@@ -45,13 +45,13 @@ def ball_pose_estimation(position):
     position - (x, y) coordinates of the center of the ball in the image
     """
     # image size is 400 x 252
-    base_xy_position = [0.695, 0.330, -0.010]
-    x_ppx_scale = 0.0002885791070673891 # per pixel shift from the base position
-    y_ppx_scale = -0.0017542260504471894
+    base_xy_position = [0.698, 0.336, -0.205]
+    x_ppx_scale = 0.001795 #0.0002885791070673891 #* (0.580 / 0.375) # per pixel shift from the base position
+    y_ppx_scale = 0.001796 #0.0017542260504471894 #* (0.580 / 0.375)
     estimated_ball_position = np.copy(base_xy_position)
     # center of image at (176, 200)
-    estimated_ball_position[0] += x_ppx_scale * (176 - position[1])
-    estimated_ball_position[1] += y_ppx_scale * (200 - position[0])
+    estimated_ball_position[0] += x_ppx_scale * (200 - position[1])
+    estimated_ball_position[1] += y_ppx_scale * (320 - position[0])
     return estimated_ball_position
 
 def read_image(filepath):

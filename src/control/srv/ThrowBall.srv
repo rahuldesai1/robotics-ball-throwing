@@ -1,4 +1,5 @@
 # Request message types
+geometry_msgs/PoseStamped target_pose
 ---
 # Response message types
 bool success
