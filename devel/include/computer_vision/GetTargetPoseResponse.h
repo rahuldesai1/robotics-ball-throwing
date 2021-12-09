@@ -24,10 +24,12 @@ struct GetTargetPoseResponse_
   typedef GetTargetPoseResponse_<ContainerAllocator> Type;
 
   GetTargetPoseResponse_()
-    : pixel_height(0.0)  {
+    : pixel_height(0.0)
+    , pixel_width(0.0)  {
     }
   GetTargetPoseResponse_(const ContainerAllocator& _alloc)
-    : pixel_height(0.0)  {
+    : pixel_height(0.0)
+    , pixel_width(0.0)  {
   (void)_alloc;
     }
 
@@ -35,6 +37,9 @@ struct GetTargetPoseResponse_
 
    typedef double _pixel_height_type;
   _pixel_height_type pixel_height;
+
+   typedef double _pixel_width_type;
+  _pixel_width_type pixel_width;
 
 
 
@@ -114,12 +119,12 @@ struct MD5Sum< ::computer_vision::GetTargetPoseResponse_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "52954f9f105493b6185412c8ca3e9ab4";
+    return "90d674dbca60d081c5c435b4dff7bfa7";
   }
 
   static const char* value(const ::computer_vision::GetTargetPoseResponse_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x52954f9f105493b6ULL;
-  static const uint64_t static_value2 = 0x185412c8ca3e9ab4ULL;
+  static const uint64_t static_value1 = 0x90d674dbca60d081ULL;
+  static const uint64_t static_value2 = 0xc5c435b4dff7bfa7ULL;
 };
 
 template<class ContainerAllocator>
@@ -140,6 +145,7 @@ struct Definition< ::computer_vision::GetTargetPoseResponse_<ContainerAllocator>
   {
     return "\n\
 float64 pixel_height\n\
+float64 pixel_width\n\
 \n\
 ";
   }
@@ -160,6 +166,7 @@ namespace serialization
     template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
     {
       stream.next(m.pixel_height);
+      stream.next(m.pixel_width);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -180,6 +187,8 @@ struct Printer< ::computer_vision::GetTargetPoseResponse_<ContainerAllocator> >
   {
     s << indent << "pixel_height: ";
     Printer<double>::stream(s, indent + "  ", v.pixel_height);
+    s << indent << "pixel_width: ";
+    Printer<double>::stream(s, indent + "  ", v.pixel_width);
   }
 };
 

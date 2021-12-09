@@ -100,15 +100,16 @@ import struct
 
 
 class GetTargetPoseResponse(genpy.Message):
-  _md5sum = "52954f9f105493b6185412c8ca3e9ab4"
+  _md5sum = "90d674dbca60d081c5c435b4dff7bfa7"
   _type = "computer_vision/GetTargetPoseResponse"
   _has_header = False  # flag to mark the presence of a Header object
   _full_text = """
 float64 pixel_height
+float64 pixel_width
 
 """
-  __slots__ = ['pixel_height']
-  _slot_types = ['float64']
+  __slots__ = ['pixel_height','pixel_width']
+  _slot_types = ['float64','float64']
 
   def __init__(self, *args, **kwds):
     """
@@ -118,7 +119,7 @@ float64 pixel_height
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       pixel_height
+       pixel_height,pixel_width
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -129,8 +130,11 @@ float64 pixel_height
       # message fields cannot be None, assign default values for those that are
       if self.pixel_height is None:
         self.pixel_height = 0.
+      if self.pixel_width is None:
+        self.pixel_width = 0.
     else:
       self.pixel_height = 0.
+      self.pixel_width = 0.
 
   def _get_types(self):
     """
@@ -144,8 +148,8 @@ float64 pixel_height
     :param buff: buffer, ``StringIO``
     """
     try:
-      _x = self.pixel_height
-      buff.write(_get_struct_d().pack(_x))
+      _x = self
+      buff.write(_get_struct_2d().pack(_x.pixel_height, _x.pixel_width))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -157,9 +161,10 @@ float64 pixel_height
     codecs.lookup_error("rosmsg").msg_type = self._type
     try:
       end = 0
+      _x = self
       start = end
-      end += 8
-      (self.pixel_height,) = _get_struct_d().unpack(str[start:end])
+      end += 16
+      (_x.pixel_height, _x.pixel_width,) = _get_struct_2d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -172,8 +177,8 @@ float64 pixel_height
     :param numpy: numpy python module
     """
     try:
-      _x = self.pixel_height
-      buff.write(_get_struct_d().pack(_x))
+      _x = self
+      buff.write(_get_struct_2d().pack(_x.pixel_height, _x.pixel_width))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -186,9 +191,10 @@ float64 pixel_height
     codecs.lookup_error("rosmsg").msg_type = self._type
     try:
       end = 0
+      _x = self
       start = end
-      end += 8
-      (self.pixel_height,) = _get_struct_d().unpack(str[start:end])
+      end += 16
+      (_x.pixel_height, _x.pixel_width,) = _get_struct_2d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -197,14 +203,14 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_d = None
-def _get_struct_d():
-    global _struct_d
-    if _struct_d is None:
-        _struct_d = struct.Struct("<d")
-    return _struct_d
+_struct_2d = None
+def _get_struct_2d():
+    global _struct_2d
+    if _struct_2d is None:
+        _struct_2d = struct.Struct("<2d")
+    return _struct_2d
 class GetTargetPose(object):
   _type          = 'computer_vision/GetTargetPose'
-  _md5sum = '52954f9f105493b6185412c8ca3e9ab4'
+  _md5sum = '90d674dbca60d081c5c435b4dff7bfa7'
   _request_class  = GetTargetPoseRequest
   _response_class = GetTargetPoseResponse

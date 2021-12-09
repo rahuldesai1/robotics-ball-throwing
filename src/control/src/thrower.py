@@ -115,8 +115,15 @@ class Thrower:
             self.limb.set_joint_velocities({joint: specs["vel"] for joint, specs in joint_specs.items()})
             rospy.sleep(self.loop_period)
 
-    def _getShouldAngleFromTargetPose(self, pixel_height):
-        return -0.27
+    def _getShouldAngleFromTargetPose(self, pixel_width):
+        if pixel_width == -1:
+            return -0.32
+        elif pixel_width < 750:
+            return -0.32
+        elif pixel_width < 850:
+            return -0.5
+        elif pixel_width < 950:
+            return -0.75 
 
     def _getVelocityFromTargetPose(self, pixel_height):
         if pixel_height == -1:
@@ -135,7 +142,8 @@ class Thrower:
     def throwBall(self, request):
         print("REQUEST TO THROW BALL")
         # get the pixel distance
-        target_pose = request.pixel_height
+        pixel_height = request.pixel_height
+        pixel_width = request.pixel_width
 
         # raw_input("Press [enter] to go to starting position:")
         self._setJointPositions(STARTING_JOINT_POSITIONS)
@@ -143,8 +151,8 @@ class Thrower:
         time.sleep(1.5)
 
         # calculate from target_pose. should target_pose be in request?
-        shoulder_angle = self._getShouldAngleFromTargetPose(target_pose)
-        velocity, wrist_only = self._getVelocityFromTargetPose(target_pose)
+        shoulder_angle = self._getShouldAngleFromTargetPose(pixel_width)
+        velocity, wrist_only = self._getVelocityFromTargetPose(pixel_height)
 
         if not wrist_only:
             joint_specs = {

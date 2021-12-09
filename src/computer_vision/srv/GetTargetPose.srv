@@ -2,3 +2,4 @@
 ---
 # Response message types
 float64 pixel_height
+float64 pixel_width

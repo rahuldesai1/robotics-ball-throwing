@@ -12,7 +12,9 @@ from baxter_interface import Limb
 
 import numpy as np
 
-
+"""
+{'left_w0': 3.0595246814374577, 'left_w1': -1.206475889671878, 'left_w2': 0.788849620170074, 'left_e0': 0.10277671278832272, 'left_e1': 0.7439806821244257, 'left_s0': -0.3482136388499889, 'left_s1': -0.4103398607593482}
+"""
 
 def diff(left, curr_dict, wanted):
     lj = left.joint_names()
@@ -88,10 +90,12 @@ def main():
         try:
             if char == 'f':
                 move_to_search_position(left)
-                target_pose = get_target_pose().pixel_height
-                print(target_pose)
+                resp = get_target_pose()
+                print(resp.pixel_height, resp.pixel_width)
+                target_pose = resp
             elif char == 'p':
                 return_to_base(left)
+                time.sleep(1.5)
                 success = pick_up() and success
                 if not success:
                     print("Service call failed")
@@ -100,7 +104,7 @@ def main():
                 if target_pose is None:
                     print("Must find the target before throwing")
                     continue
-                success = throw(target_pose)
+                success = throw(target_pose.pixel_height, target_pose.pixel_width)
                 if not success:
                     print("Service call failed")
                     continue
@@ -117,5 +121,7 @@ def main():
 
 # Python's syntax for a main() method
 if __name__ == '__main__':
-
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("DONE")
