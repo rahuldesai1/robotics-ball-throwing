@@ -37,10 +37,10 @@ def bin_detection(im):
         right_edge, left_edge = np.max(max_contour[:,0]), np.min(max_contour[:,0])
         center_x = (right_edge + left_edge) / 2
         pixel = point_ontop(max_contour, center_x)
-    plt.plot(pixel[0], pixel[1], color='red', markersize=7, marker = 'o')
-    plt.imshow(img)
-    plt.show() 
-
+    #plt.plot(pixel[0], pixel[1], color='red', markersize=7, marker = 'o')
+    #plt.imshow(img)
+    #plt.show() 
+    #print(pixel[1])
     return pixel
 
 def point_ontop(contour, x_coord):
@@ -54,6 +54,17 @@ def point_ontop(contour, x_coord):
     candidates = np.array(candidates)
     # candidates = np.where(contour, np.abs(contour[:, 0] - x_coord) <= 1)
     return candidates[np.argmin(candidates[:, 1])]
+
+
+def calculate_distance(pixel):
+    distance = -0.73170731707317 * pixel[1] + 157.80487804878
+    return distance 
+
+def calculate_angle(pixel):
+    center_x_coordinate = 200
+    angleperpixel = 1/1 # TODO
+    angle = (center_x_coordinate - pixel[0]) * angleperpixel
+    return angle
 
 
 def bin_pose_estimation(pixel, camera_pose, camera_rotation, intrinsic_matrix, floor_height=0, shift_to_center=0.2):
@@ -91,9 +102,13 @@ def bin_cartesian_to_polar(pose, reference):
     return angle, distance
 
 if __name__ == "__main__":
-    img = cv2.imread("/Users/edouardvindevogel/Downloads/lab_imgs/binfar.png")
+    img = cv2.imread("/Users/edouardvindevogel/robotics-ball-throwing/lab_imgs/final_50.png")
     pixel = bin_detection(img)
+    distance = calculate_distance(pixel)
+    angle = calculate_angle(pixel)
     #plt.imshow(img)
     #plt.plot([pixel[1]], [pixel[0]])
     #plt.show()
+    #print(distance)
+    #print(angle)
 
