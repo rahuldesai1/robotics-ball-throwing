@@ -49,41 +49,41 @@
 
 (defclass computer_vision::GetTargetPoseResponse
   :super ros::object
-  :slots (_ball_pose ))
+  :slots (_target_pose ))
 
 (defmethod computer_vision::GetTargetPoseResponse
   (:init
    (&key
-    ((:ball_pose __ball_pose) (instance geometry_msgs::PoseStamped :init))
+    ((:target_pose __target_pose) (instance geometry_msgs::PoseStamped :init))
     )
    (send-super :init)
-   (setq _ball_pose __ball_pose)
+   (setq _target_pose __target_pose)
    self)
-  (:ball_pose
-   (&rest __ball_pose)
-   (if (keywordp (car __ball_pose))
-       (send* _ball_pose __ball_pose)
+  (:target_pose
+   (&rest __target_pose)
+   (if (keywordp (car __target_pose))
+       (send* _target_pose __target_pose)
      (progn
-       (if __ball_pose (setq _ball_pose (car __ball_pose)))
-       _ball_pose)))
+       (if __target_pose (setq _target_pose (car __target_pose)))
+       _target_pose)))
   (:serialization-length
    ()
    (+
-    ;; geometry_msgs/PoseStamped _ball_pose
-    (send _ball_pose :serialization-length)
+    ;; geometry_msgs/PoseStamped _target_pose
+    (send _target_pose :serialization-length)
     ))
   (:serialize
    (&optional strm)
    (let ((s (if strm strm
               (make-string-output-stream (send self :serialization-length)))))
-     ;; geometry_msgs/PoseStamped _ball_pose
-       (send _ball_pose :serialize s)
+     ;; geometry_msgs/PoseStamped _target_pose
+       (send _target_pose :serialize s)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
    (buf &optional (ptr- 0))
-   ;; geometry_msgs/PoseStamped _ball_pose
-     (send _ball_pose :deserialize buf ptr-) (incf ptr- (send _ball_pose :serialization-length))
+   ;; geometry_msgs/PoseStamped _target_pose
+     (send _target_pose :deserialize buf ptr-) (incf ptr- (send _target_pose :serialization-length))
    ;;
    self)
   )
@@ -92,7 +92,7 @@
   :super ros::object
   :slots ())
 
-(setf (get computer_vision::GetTargetPose :md5sum-) "1d7a58f8ac7c61cd568e699d96ad3e1c")
+(setf (get computer_vision::GetTargetPose :md5sum-) "257d089627d7eb7136c24d3593d05a16")
 (setf (get computer_vision::GetTargetPose :datatype-) "computer_vision/GetTargetPose")
 (setf (get computer_vision::GetTargetPose :request) computer_vision::GetTargetPoseRequest)
 (setf (get computer_vision::GetTargetPose :response) computer_vision::GetTargetPoseResponse)
@@ -100,13 +100,13 @@
 (defmethod computer_vision::GetTargetPoseRequest
   (:response () (instance computer_vision::GetTargetPoseResponse :init)))
 
-(setf (get computer_vision::GetTargetPoseRequest :md5sum-) "1d7a58f8ac7c61cd568e699d96ad3e1c")
+(setf (get computer_vision::GetTargetPoseRequest :md5sum-) "257d089627d7eb7136c24d3593d05a16")
 (setf (get computer_vision::GetTargetPoseRequest :datatype-) "computer_vision/GetTargetPoseRequest")
 (setf (get computer_vision::GetTargetPoseRequest :definition-)
       "
 ---
 
-geometry_msgs/PoseStamped ball_pose
+geometry_msgs/PoseStamped target_pose
 
 
 ================================================================================
@@ -156,13 +156,13 @@ float64 z
 float64 w
 ")
 
-(setf (get computer_vision::GetTargetPoseResponse :md5sum-) "1d7a58f8ac7c61cd568e699d96ad3e1c")
+(setf (get computer_vision::GetTargetPoseResponse :md5sum-) "257d089627d7eb7136c24d3593d05a16")
 (setf (get computer_vision::GetTargetPoseResponse :datatype-) "computer_vision/GetTargetPoseResponse")
 (setf (get computer_vision::GetTargetPoseResponse :definition-)
       "
 ---
 
-geometry_msgs/PoseStamped ball_pose
+geometry_msgs/PoseStamped target_pose
 
 
 ================================================================================
@@ -214,6 +214,6 @@ float64 w
 
 
 
-(provide :computer_vision/GetTargetPose "1d7a58f8ac7c61cd568e699d96ad3e1c")
+(provide :computer_vision/GetTargetPose "257d089627d7eb7136c24d3593d05a16")
 
 

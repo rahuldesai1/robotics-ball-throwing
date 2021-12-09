@@ -75,22 +75,22 @@ class GetTargetPoseResponse {
   constructor(initObj={}) {
     if (initObj === null) {
       // initObj === null is a special case for deserialization where we don't initialize fields
-      this.ball_pose = null;
+      this.target_pose = null;
     }
     else {
-      if (initObj.hasOwnProperty('ball_pose')) {
-        this.ball_pose = initObj.ball_pose
+      if (initObj.hasOwnProperty('target_pose')) {
+        this.target_pose = initObj.target_pose
       }
       else {
-        this.ball_pose = new geometry_msgs.msg.PoseStamped();
+        this.target_pose = new geometry_msgs.msg.PoseStamped();
       }
     }
   }
 
   static serialize(obj, buffer, bufferOffset) {
     // Serializes a message object of type GetTargetPoseResponse
-    // Serialize message field [ball_pose]
-    bufferOffset = geometry_msgs.msg.PoseStamped.serialize(obj.ball_pose, buffer, bufferOffset);
+    // Serialize message field [target_pose]
+    bufferOffset = geometry_msgs.msg.PoseStamped.serialize(obj.target_pose, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -98,14 +98,14 @@ class GetTargetPoseResponse {
     //deserializes a message object of type GetTargetPoseResponse
     let len;
     let data = new GetTargetPoseResponse(null);
-    // Deserialize message field [ball_pose]
-    data.ball_pose = geometry_msgs.msg.PoseStamped.deserialize(buffer, bufferOffset);
+    // Deserialize message field [target_pose]
+    data.target_pose = geometry_msgs.msg.PoseStamped.deserialize(buffer, bufferOffset);
     return data;
   }
 
   static getMessageSize(object) {
     let length = 0;
-    length += geometry_msgs.msg.PoseStamped.getMessageSize(object.ball_pose);
+    length += geometry_msgs.msg.PoseStamped.getMessageSize(object.target_pose);
     return length;
   }
 
@@ -116,14 +116,14 @@ class GetTargetPoseResponse {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '1d7a58f8ac7c61cd568e699d96ad3e1c';
+    return '257d089627d7eb7136c24d3593d05a16';
   }
 
   static messageDefinition() {
     // Returns full string definition for message
     return `
     
-    geometry_msgs/PoseStamped ball_pose
+    geometry_msgs/PoseStamped target_pose
     
     
     ================================================================================
@@ -181,11 +181,11 @@ class GetTargetPoseResponse {
       msg = {};
     }
     const resolved = new GetTargetPoseResponse(null);
-    if (msg.ball_pose !== undefined) {
-      resolved.ball_pose = geometry_msgs.msg.PoseStamped.Resolve(msg.ball_pose)
+    if (msg.target_pose !== undefined) {
+      resolved.target_pose = geometry_msgs.msg.PoseStamped.Resolve(msg.target_pose)
     }
     else {
-      resolved.ball_pose = new geometry_msgs.msg.PoseStamped()
+      resolved.target_pose = new geometry_msgs.msg.PoseStamped()
     }
 
     return resolved;
@@ -195,6 +195,6 @@ class GetTargetPoseResponse {
 module.exports = {
   Request: GetTargetPoseRequest,
   Response: GetTargetPoseResponse,
-  md5sum() { return '1d7a58f8ac7c61cd568e699d96ad3e1c'; },
+  md5sum() { return '257d089627d7eb7136c24d3593d05a16'; },
   datatype() { return 'computer_vision/GetTargetPose'; }
 };

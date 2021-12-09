@@ -25,17 +25,17 @@ struct GetTargetPoseResponse_
   typedef GetTargetPoseResponse_<ContainerAllocator> Type;
 
   GetTargetPoseResponse_()
-    : ball_pose()  {
+    : target_pose()  {
     }
   GetTargetPoseResponse_(const ContainerAllocator& _alloc)
-    : ball_pose(_alloc)  {
+    : target_pose(_alloc)  {
   (void)_alloc;
     }
 
 
 
-   typedef  ::geometry_msgs::PoseStamped_<ContainerAllocator>  _ball_pose_type;
-  _ball_pose_type ball_pose;
+   typedef  ::geometry_msgs::PoseStamped_<ContainerAllocator>  _target_pose_type;
+  _target_pose_type target_pose;
 
 
 
@@ -115,12 +115,12 @@ struct MD5Sum< ::computer_vision::GetTargetPoseResponse_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "1d7a58f8ac7c61cd568e699d96ad3e1c";
+    return "257d089627d7eb7136c24d3593d05a16";
   }
 
   static const char* value(const ::computer_vision::GetTargetPoseResponse_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x1d7a58f8ac7c61cdULL;
-  static const uint64_t static_value2 = 0x568e699d96ad3e1cULL;
+  static const uint64_t static_value1 = 0x257d089627d7eb71ULL;
+  static const uint64_t static_value2 = 0x36c24d3593d05a16ULL;
 };
 
 template<class ContainerAllocator>
@@ -140,7 +140,7 @@ struct Definition< ::computer_vision::GetTargetPoseResponse_<ContainerAllocator>
   static const char* value()
   {
     return "\n\
-geometry_msgs/PoseStamped ball_pose\n\
+geometry_msgs/PoseStamped target_pose\n\
 \n\
 \n\
 ================================================================================\n\
@@ -206,7 +206,7 @@ namespace serialization
   {
     template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
     {
-      stream.next(m.ball_pose);
+      stream.next(m.target_pose);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -225,9 +225,9 @@ struct Printer< ::computer_vision::GetTargetPoseResponse_<ContainerAllocator> >
 {
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::computer_vision::GetTargetPoseResponse_<ContainerAllocator>& v)
   {
-    s << indent << "ball_pose: ";
+    s << indent << "target_pose: ";
     s << std::endl;
-    Printer< ::geometry_msgs::PoseStamped_<ContainerAllocator> >::stream(s, indent + "  ", v.ball_pose);
+    Printer< ::geometry_msgs::PoseStamped_<ContainerAllocator> >::stream(s, indent + "  ", v.target_pose);
   }
 };
 

@@ -22,7 +22,6 @@ STARTING_JOINT_POSITIONS = {
 }
 JOINT_NAMES = ["left_s0", "left_s1", "left_e0", "left_e1", "left_w0", "left_w1", "left_w2"]
 
-
 class Thrower:
     def __init__(self):
         # Wait for the dependent services to become available

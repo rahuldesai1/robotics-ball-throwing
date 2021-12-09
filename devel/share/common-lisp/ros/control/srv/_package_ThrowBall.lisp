@@ -1,4 +1,6 @@
 (cl:in-package control-srv)
-(cl:export '(SUCCESS-VAL
+(cl:export '(TARGET_POSE-VAL
+          TARGET_POSE
+          SUCCESS-VAL
           SUCCESS
 ))
