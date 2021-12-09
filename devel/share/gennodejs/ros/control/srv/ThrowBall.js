@@ -22,6 +22,7 @@ class ThrowBallRequest {
     if (initObj === null) {
       // initObj === null is a special case for deserialization where we don't initialize fields
       this.pixel_height = null;
+      this.pixel_width = null;
     }
     else {
       if (initObj.hasOwnProperty('pixel_height')) {
@@ -30,6 +31,12 @@ class ThrowBallRequest {
       else {
         this.pixel_height = 0.0;
       }
+      if (initObj.hasOwnProperty('pixel_width')) {
+        this.pixel_width = initObj.pixel_width
+      }
+      else {
+        this.pixel_width = 0.0;
+      }
     }
   }
 
@@ -37,6 +44,8 @@ class ThrowBallRequest {
     // Serializes a message object of type ThrowBallRequest
     // Serialize message field [pixel_height]
     bufferOffset = _serializer.float64(obj.pixel_height, buffer, bufferOffset);
+    // Serialize message field [pixel_width]
+    bufferOffset = _serializer.float64(obj.pixel_width, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -46,11 +55,13 @@ class ThrowBallRequest {
     let data = new ThrowBallRequest(null);
     // Deserialize message field [pixel_height]
     data.pixel_height = _deserializer.float64(buffer, bufferOffset);
+    // Deserialize message field [pixel_width]
+    data.pixel_width = _deserializer.float64(buffer, bufferOffset);
     return data;
   }
 
   static getMessageSize(object) {
-    return 8;
+    return 16;
   }
 
   static datatype() {
@@ -60,7 +71,7 @@ class ThrowBallRequest {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '52954f9f105493b6185412c8ca3e9ab4';
+    return '90d674dbca60d081c5c435b4dff7bfa7';
   }
 
   static messageDefinition() {
@@ -68,6 +79,7 @@ class ThrowBallRequest {
     return `
     
     float64 pixel_height
+    float64 pixel_width
     
     `;
   }
@@ -83,6 +95,13 @@ class ThrowBallRequest {
     }
     else {
       resolved.pixel_height = 0.0
+    }
+
+    if (msg.pixel_width !== undefined) {
+      resolved.pixel_width = msg.pixel_width;
+    }
+    else {
+      resolved.pixel_width = 0.0
     }
 
     return resolved;
@@ -165,6 +184,6 @@ class ThrowBallResponse {
 module.exports = {
   Request: ThrowBallRequest,
   Response: ThrowBallResponse,
-  md5sum() { return '1f0593be718173ba91ca9ae3b0c6177b'; },
+  md5sum() { return 'f7e1f764558f025facd58a98ecb551a0'; },
   datatype() { return 'control/ThrowBall'; }
 };

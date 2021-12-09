@@ -50,10 +50,10 @@ class Vision:
         img_msg = rospy.wait_for_message("/cameras/left_hand_camera/image", Image)
         bridge = CvBridge()
         cv_img = bridge.imgmsg_to_cv2(img_msg, 'rgb8')
-        pixel_height = bin_detection(cv_img)
-        if pixel_height is None:
-            return -1
-        return pixel_height[1]
+        pixel = bin_detection(cv_img)
+        if pixel is None:
+            return -1, -1
+        return pixel[1], pixel[0]
         
     def run(self):
         rospy.spin()
