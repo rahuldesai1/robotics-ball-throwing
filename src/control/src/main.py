@@ -9,8 +9,9 @@ from baxter_interface import Limb
 
 import numpy as np
 
+left = Limb('left')
+
 def diff(curr_dict, wanted):
-    left = Limb('left')
     lj = left.joint_names()
     
     d = 0
@@ -21,7 +22,6 @@ def diff(curr_dict, wanted):
 def return_to_base():
     angles = [-0.05138835639416136, -0.6412039693361029,-1.6908303234466973, 0.9618059540041545, 1.1006312153077844, 2.0056798801601783, -0.25349032519806464]
     angle_dict = {}
-    left = Limb('left')
     lj = left.joint_names()
     for i in range(len(lj)):
         angle_dict[lj[i]] = angles[i]
@@ -34,7 +34,6 @@ def return_to_base():
 def move_to_search_position():
     angles = [-0.05138835639416136, -0.6412039693361029,-1.6908303234466973, 0.9618059540041545, 1.1006312153077844, 2.0056798801601783, -0.25349032519806464]
     angle_dict = {}
-    left = Limb('left')
     lj = left.joint_names()
     for i in range(len(lj)):
         angle_dict[lj[i]] = angles[i]
@@ -57,6 +56,8 @@ def main():
     pick_up = rospy.ServiceProxy('picker', PickUpBall)
     throw = rospy.ServiceProxy('thrower', ThrowBall)
     get_target_pose = rospy.ServiceProxy('target_pose', GetTargetPose)
+
+    print(left.joint_angles())
 
     arm = 'left'
     gripper = robot_gripper.Gripper(arm)
