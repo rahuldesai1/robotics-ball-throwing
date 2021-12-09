@@ -4,8 +4,6 @@ import cv2
 import matplotlib.pyplot as plt
 from PIL import Image
 
-#MAX_CONTOUR_AREA = 2000
-#MIN_CONTOUR_AREA = 500
 
 def bin_detection(im):
     """
@@ -15,57 +13,43 @@ def bin_detection(im):
     # lower_boundary = (70, 70, 100)
     # upper_boundary = (100, 200, 200)
 
-    lower_boundary = (70, 20, 100)
-    upper_boundary = (100, 200, 200)
 
-    # blur image
-    blurred_im = cv2.GaussianBlur(im, (11, 11), 0)
-    hsv_im = cv2.cvtColor(blurred_im, cv2.COLOR_RGB2HSV)
+    lower = [55, 105, 55]
+    upper = [140, 170, 100]
 
-    # construct a mask for the green ball
-    mask = cv2.inRange(hsv_im, lower_boundary, upper_boundary)
-    # remove artifacts
+    # create NumPy arrays from the boundaries
+    lower = np.array(lower, dtype = "uint8")
+    upper = np.array(upper, dtype = "uint8")
+    # find the colors within the specified boundaries and apply
+    # the mask
+    mask = cv2.inRange(im, lower, upper)
     mask = cv2.erode(mask, None, iterations=2)
     # restore cluster mass after erosion
     mask = cv2.dilate(mask, None, iterations=2)
-
-
     contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
     pixel = None
 
-    print(contours)
-    """
-    filtered_contours = []
-    for contour in contours:
-        # print(cv2.contourArea(contour))
-        if MIN_CONTOUR_AREA <= cv2.contourArea(contour) <= MAX_CONTOUR_AREA:
-            filtered_contours.append(contour)
-    #filtered_contours = list(filter(lambda c: MIN_CONTOUR_AREA <= cv2.contourArea(c) <= MAX_CONTOUR_AREA, contours))
-    """
-
-
-    cv2.drawContours(im, contours, -1, (255,0,0), 3)
-    cv2.imshow('Output', im)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-    if len(filtered_contours) > 0:
+    #only pick the center contours
+    if len(contours) > 0:
         # find the largest contour in the mask
-        max_contour = max(filtered_contours, key=cv2.contourArea)
-        print(max_contour)
-        right_edge, left_edge = np.max(max_contour[:,0]), np.min(max_contour[:,1])
+        max_contour = max(contours, key=cv2.contourArea)
+        max_contour = max_contour.reshape((max_contour.shape[0],2))
+        right_edge, left_edge = np.max(max_contour[:,0]), np.min(max_contour[:,0])
         center_x = (right_edge + left_edge) / 2
-        pixel = point_below(max_contour, center_x)
+        pixel = point_ontop(max_contour, center_x)
+    plt.plot(pixel[0], pixel[1], color='red', markersize=7, marker = 'o')
+    plt.imshow(img)
+    plt.show() 
 
     return pixel
 
-def point_below(contour, x_coord):
+def point_ontop(contour, x_coord):
     """
-    Compute point along bottom edge of contour at x_coord
+    Compute point along top edge of contour at x_coord
     """
     candidates = []
     for pt in contour:
-        if abs(pt[0] - x_coord) <= 1:
+        if abs(pt[0] - x_coord) <= 5:
             candidates.append(pt)
     candidates = np.array(candidates)
     # candidates = np.where(contour, np.abs(contour[:, 0] - x_coord) <= 1)
@@ -107,9 +91,9 @@ def bin_cartesian_to_polar(pose, reference):
     return angle, distance
 
 if __name__ == "__main__":
-    img = np.array(Image.open("../../../lab_imgs/box_with_green.png"))
+    img = cv2.imread("/Users/edouardvindevogel/Downloads/lab_imgs/binfar.png")
     pixel = bin_detection(img)
-    plt.imshow(img)
-    plt.plot([pixel[1]], [pixel[0]])
-    plt.show()
+    #plt.imshow(img)
+    #plt.plot([pixel[1]], [pixel[0]])
+    #plt.show()
 
