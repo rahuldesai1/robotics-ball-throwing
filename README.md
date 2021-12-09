@@ -32,3 +32,6 @@ Solution: Don't forget to run `source devel/setup.bash` when you open a new term
 [rosrun]   /home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/src/computer_vision/src/vision.py
 ```
 Solution: `chmod +x src/control/src/*.py`, `chmod +x src/computer_vision/src/*.py`
+
+To change the camera resolution our defaults:
+Solution: `rosrun camera_control.py -c left_hand_camera`, `rosrun camera_control.py -o left_hand_camera -r 640x400`
