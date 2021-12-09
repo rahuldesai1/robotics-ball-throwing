@@ -1,4 +1,4 @@
 (cl:in-package computer_vision-srv)
-(cl:export '(TARGET_POSE-VAL
-          TARGET_POSE
+(cl:export '(PIXEL_HEIGHT-VAL
+          PIXEL_HEIGHT
 ))

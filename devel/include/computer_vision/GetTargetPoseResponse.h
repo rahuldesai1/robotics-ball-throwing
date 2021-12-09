@@ -15,7 +15,6 @@
 #include <ros/builtin_message_traits.h>
 #include <ros/message_operations.h>
 
-#include <geometry_msgs/PoseStamped.h>
 
 namespace computer_vision
 {
@@ -25,17 +24,17 @@ struct GetTargetPoseResponse_
   typedef GetTargetPoseResponse_<ContainerAllocator> Type;
 
   GetTargetPoseResponse_()
-    : target_pose()  {
+    : pixel_height(0.0)  {
     }
   GetTargetPoseResponse_(const ContainerAllocator& _alloc)
-    : target_pose(_alloc)  {
+    : pixel_height(0.0)  {
   (void)_alloc;
     }
 
 
 
-   typedef  ::geometry_msgs::PoseStamped_<ContainerAllocator>  _target_pose_type;
-  _target_pose_type target_pose;
+   typedef double _pixel_height_type;
+  _pixel_height_type pixel_height;
 
 
 
@@ -71,7 +70,7 @@ namespace message_traits
 
 
 
-// BOOLTRAITS {'IsFixedSize': False, 'IsMessage': True, 'HasHeader': False}
+// BOOLTRAITS {'IsFixedSize': True, 'IsMessage': True, 'HasHeader': False}
 // {'std_msgs': ['/opt/ros/kinetic/share/std_msgs/cmake/../msg'], 'geometry_msgs': ['/opt/ros/kinetic/share/geometry_msgs/cmake/../msg']}
 
 // !!!!!!!!!!! ['__class__', '__delattr__', '__dict__', '__doc__', '__eq__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_parsed_fields', 'constants', 'fields', 'full_name', 'has_header', 'header_present', 'names', 'package', 'parsed_fields', 'short_name', 'text', 'types']
@@ -81,12 +80,12 @@ namespace message_traits
 
 template <class ContainerAllocator>
 struct IsFixedSize< ::computer_vision::GetTargetPoseResponse_<ContainerAllocator> >
-  : FalseType
+  : TrueType
   { };
 
 template <class ContainerAllocator>
 struct IsFixedSize< ::computer_vision::GetTargetPoseResponse_<ContainerAllocator> const>
-  : FalseType
+  : TrueType
   { };
 
 template <class ContainerAllocator>
@@ -115,12 +114,12 @@ struct MD5Sum< ::computer_vision::GetTargetPoseResponse_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "257d089627d7eb7136c24d3593d05a16";
+    return "52954f9f105493b6185412c8ca3e9ab4";
   }
 
   static const char* value(const ::computer_vision::GetTargetPoseResponse_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x257d089627d7eb71ULL;
-  static const uint64_t static_value2 = 0x36c24d3593d05a16ULL;
+  static const uint64_t static_value1 = 0x52954f9f105493b6ULL;
+  static const uint64_t static_value2 = 0x185412c8ca3e9ab4ULL;
 };
 
 template<class ContainerAllocator>
@@ -140,54 +139,8 @@ struct Definition< ::computer_vision::GetTargetPoseResponse_<ContainerAllocator>
   static const char* value()
   {
     return "\n\
-geometry_msgs/PoseStamped target_pose\n\
+float64 pixel_height\n\
 \n\
-\n\
-================================================================================\n\
-MSG: geometry_msgs/PoseStamped\n\
-# A Pose with reference coordinate frame and timestamp\n\
-Header header\n\
-Pose pose\n\
-\n\
-================================================================================\n\
-MSG: std_msgs/Header\n\
-# Standard metadata for higher-level stamped data types.\n\
-# This is generally used to communicate timestamped data \n\
-# in a particular coordinate frame.\n\
-# \n\
-# sequence ID: consecutively increasing ID \n\
-uint32 seq\n\
-#Two-integer timestamp that is expressed as:\n\
-# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')\n\
-# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')\n\
-# time-handling sugar is provided by the client library\n\
-time stamp\n\
-#Frame this data is associated with\n\
-# 0: no frame\n\
-# 1: global frame\n\
-string frame_id\n\
-\n\
-================================================================================\n\
-MSG: geometry_msgs/Pose\n\
-# A representation of pose in free space, composed of position and orientation. \n\
-Point position\n\
-Quaternion orientation\n\
-\n\
-================================================================================\n\
-MSG: geometry_msgs/Point\n\
-# This contains the position of a point in free space\n\
-float64 x\n\
-float64 y\n\
-float64 z\n\
-\n\
-================================================================================\n\
-MSG: geometry_msgs/Quaternion\n\
-# This represents an orientation in free space in quaternion form.\n\
-\n\
-float64 x\n\
-float64 y\n\
-float64 z\n\
-float64 w\n\
 ";
   }
 
@@ -206,7 +159,7 @@ namespace serialization
   {
     template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
     {
-      stream.next(m.target_pose);
+      stream.next(m.pixel_height);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -225,9 +178,8 @@ struct Printer< ::computer_vision::GetTargetPoseResponse_<ContainerAllocator> >
 {
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::computer_vision::GetTargetPoseResponse_<ContainerAllocator>& v)
   {
-    s << indent << "target_pose: ";
-    s << std::endl;
-    Printer< ::geometry_msgs::PoseStamped_<ContainerAllocator> >::stream(s, indent + "  ", v.target_pose);
+    s << indent << "pixel_height: ";
+    Printer<double>::stream(s, indent + "  ", v.pixel_height);
   }
 };
 

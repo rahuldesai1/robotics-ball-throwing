@@ -13,6 +13,7 @@ from geometry_msgs.msg import PoseStamped
 from sensor_msgs.msg import Image
 
 from ball_detection_utils import ball_detection, ball_pose_estimation
+from bin_detection import bin_detection
 
 class Vision:
     def __init__(self):
@@ -47,8 +48,12 @@ class Vision:
     def localizeTarget(self, request):
         print("REQUEST FOR TARGET POSE")
         img_msg = rospy.wait_for_message("/cameras/left_hand_camera/image", Image)
-        output = PoseStamped()
-        return output
+        bridge = CvBridge()
+        cv_img = bridge.imgmsg_to_cv2(img_msg, 'rgb8')
+        pixel_height = bin_detection(cv_img)
+        if pixel_height is None:
+            return -1
+        return pixel_height[1]
         
     def run(self):
         rospy.spin()

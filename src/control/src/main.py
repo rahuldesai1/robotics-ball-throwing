@@ -88,7 +88,8 @@ def main():
         try:
             if char == 'f':
                 move_to_search_position(left)
-                target_pose = get_target_pose().target_pose
+                target_pose = get_target_pose().pixel_height
+                print(target_pose)
             elif char == 'p':
                 return_to_base(left)
                 success = pick_up() and success
@@ -96,9 +97,9 @@ def main():
                     print("Service call failed")
                     continue
             elif char == 't':
-                #if target_pose is None:
-                #    print("Must find the target before throwing")
-                #    continue
+                if target_pose is None:
+                    print("Must find the target before throwing")
+                    continue
                 success = throw(target_pose)
                 if not success:
                     print("Service call failed")

@@ -40,7 +40,7 @@ template<>
 struct MD5Sum< ::computer_vision::GetTargetPose > {
   static const char* value()
   {
-    return "257d089627d7eb7136c24d3593d05a16";
+    return "52954f9f105493b6185412c8ca3e9ab4";
   }
 
   static const char* value(const ::computer_vision::GetTargetPose&) { return value(); }

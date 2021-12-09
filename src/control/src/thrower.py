@@ -115,18 +115,27 @@ class Thrower:
             self.limb.set_joint_velocities({joint: specs["vel"] for joint, specs in joint_specs.items()})
             rospy.sleep(self.loop_period)
 
-    def _getShouldAngleFromTargetPose(self, target_pose):
+    def _getShouldAngleFromTargetPose(self, pixel_height):
         return -0.27
 
-    def _getVelocityFromTargetPose(self, target_pose):
-        return 3, False
+    def _getVelocityFromTargetPose(self, pixel_height):
+        if pixel_height == -1:
+            return 2, True
+
+        if pixel_height < 450:
+            return 3, False
+        elif pixel_height < 500:
+            return 1.2, False
+        elif pixel_height < 520:
+            return 0.8, False
+        else:
+            return 2, True
 
     # Callback
     def throwBall(self, request):
         print("REQUEST TO THROW BALL")
-        # get the position of the target in world coordinates
-        #target_pose = request.target_pose
-        target_pose = None
+        # get the pixel distance
+        target_pose = request.pixel_height
 
         # raw_input("Press [enter] to go to starting position:")
         self._setJointPositions(STARTING_JOINT_POSITIONS)

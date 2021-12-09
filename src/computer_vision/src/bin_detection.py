@@ -14,7 +14,8 @@ def bin_detection(im):
     # upper_boundary = (100, 200, 200)
 
 
-    lower = [55, 105, 55]
+    #lower = [55, 105, 55]
+    lower = [50, 100, 50]
     upper = [140, 170, 100]
 
     # create NumPy arrays from the boundaries
@@ -26,7 +27,7 @@ def bin_detection(im):
     mask = cv2.erode(mask, None, iterations=2)
     # restore cluster mass after erosion
     mask = cv2.dilate(mask, None, iterations=2)
-    contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+    contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
     pixel = None
 
     #only pick the center contours
@@ -66,9 +67,9 @@ def calculate_angle(pixel):
     angle = (center_x_coordinate - pixel[0]) * angleperpixel
     return angle
 
-
+"""
 def bin_pose_estimation(pixel, camera_pose, camera_rotation, intrinsic_matrix, floor_height=0, shift_to_center=0.2):
-    """
+    
     pixel - (x,y) in pxls of pxl below center of mass on the edge of bin/ground
     camera_pose - (x,y,z) in meters of camera position
     camera_rotation - 3x3 matrix that rotates from camera reference frame to robot base reference frame (z is up)
@@ -77,7 +78,7 @@ def bin_pose_estimation(pixel, camera_pose, camera_rotation, intrinsic_matrix, f
     shift_to_center - distance from edge of bin to center of bin
 
     Returns estimated bin pose in robot reference frame
-    """
+    
     homogenous_coords = intrinsic_matrix @ pixel
     ray = camera_rotation @ homogenous_coords
 
@@ -88,6 +89,7 @@ def bin_pose_estimation(pixel, camera_pose, camera_rotation, intrinsic_matrix, f
 
     bin_center_pose = bin_pose + shift_to_center * xy_ray
     return bin_center_pose
+"""
 
 def bin_cartesian_to_polar(pose, reference):
     """

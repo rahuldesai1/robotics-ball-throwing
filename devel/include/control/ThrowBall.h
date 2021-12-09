@@ -40,7 +40,7 @@ template<>
 struct MD5Sum< ::control::ThrowBall > {
   static const char* value()
   {
-    return "548e99f135dd6026231a1f7b41de0e99";
+    return "1f0593be718173ba91ca9ae3b0c6177b";
   }
 
   static const char* value(const ::control::ThrowBall&) { return value(); }

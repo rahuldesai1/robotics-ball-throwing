@@ -2,8 +2,7 @@
 (cl:in-package :asdf)
 
 (defsystem "control-srv"
-  :depends-on (:roslisp-msg-protocol :roslisp-utils :geometry_msgs-msg
-)
+  :depends-on (:roslisp-msg-protocol :roslisp-utils )
   :components ((:file "_package")
     (:file "PickUpBall" :depends-on ("_package_PickUpBall"))
     (:file "_package_PickUpBall" :depends-on ("_package"))

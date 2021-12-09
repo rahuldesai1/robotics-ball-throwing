@@ -1,5 +1,5 @@
 # Request message types
-geometry_msgs/PoseStamped target_pose
+float64 pixel_height
 ---
 # Response message types
 bool success

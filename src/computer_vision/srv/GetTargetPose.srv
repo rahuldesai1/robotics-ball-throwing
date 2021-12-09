@@ -1,4 +1,4 @@
 # Request message types
 ---
 # Response message types
-geometry_msgs/PoseStamped target_pose
+float64 pixel_height
