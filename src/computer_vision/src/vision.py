@@ -23,6 +23,7 @@ class Vision:
         # Create the service
         rospy.Service('ball_pose', GetBallPose, self.localizeBall)
         rospy.Service('target_pose', GetTargetPose, self.localizeTarget)
+        print("Service Initialized")
 
     # Callback 1
     def localizeBall(self, request):
@@ -45,11 +46,9 @@ class Vision:
     # Callback 2
     def localizeTarget(self, request):
         print("REQUEST FOR TARGET POSE")
-        mocked_result = PoseStamped()
-        mocked_result.pose.position.x = 0.000
-        mocked_result.pose.position.y = 0.000
-        mocked_result.pose.position.z = 0.000
-        return mocked_result
+        img_msg = rospy.wait_for_message("/cameras/left_hand_camera/image", Image)
+        output = PoseStamped()
+        return output
         
     def run(self):
         rospy.spin()
