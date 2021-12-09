@@ -132,12 +132,14 @@ Lcam = np.array([
     [ 5.47928716e-02,-2.09287937e-02, 9.98278381e-01, 9.97801819e+01]])
 inches_per_meter = 39.37
 side_lengths = ((7.4/inches_per_meter)/8, (9.7/inches_per_meter)/11)
+x_res, y_res = 400, 252
 
 def pxl_to_board(px, py, Z=0):
     X = np.linalg.inv(np.hstack((Lcam[:,0:2] ,np.array([[-1*px],[-1*py],[-1]])))).dot((-Z*Lcam[:,2]-Lcam[:,3]))
     return X[:2]
 
-center_board = pxl_to_board(0,0)
+center = (x_res/2,y_res/2)
+center_board = pxl_to_board(*center)
 def pxl_to_pose(px, py):
     """ returns meters offset from camera to ball """
     X = pxl_to_board(px, py) - center_board
