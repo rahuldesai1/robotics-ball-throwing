@@ -59,7 +59,7 @@ class Picker:
         joint_state = response.solution.joint_state
 
         joints = {}
-        for name, position in zip(joint_state.name, joint_state.position):
+        for name, position in zip(joint_state.name, joint_state.position)[1:8]:
             joints[name] = position
 
         self._setJointPositions(joints)
