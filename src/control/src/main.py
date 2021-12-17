@@ -98,7 +98,7 @@ def main():
                 target_pose = resp
             elif char == 'p':
                 success = return_to_base(left)
-                time.sleep(1.5)
+                time.sleep(0.5)
                 success = pick_up() and success
                 if not success:
                     print("Service call failed")

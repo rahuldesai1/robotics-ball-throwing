@@ -46,7 +46,7 @@ def ball_pose_estimation(position):
     """
     # image size is 400 x 252
     base_xy_position = [0.698, 0.336, -0.205]
-    x_ppx_scale = 0.001795 #0.0002885791070673891 #* (0.580 / 0.375) # per pixel shift from the base position
+    x_ppx_scale = 0.00185 #0.0002885791070673891 #* (0.580 / 0.375) # per pixel shift from the base position
     y_ppx_scale = 0.00172 #0.0017542260504471894 #* (0.580 / 0.375)
     estimated_ball_position = np.copy(base_xy_position)
     # center of image at (176, 200)
@@ -59,7 +59,7 @@ def ball_pose_estimation(position):
     print(x_ppx_scale * (200 - position[1]), y_ppx_scale * (320 - position[0]))
     print((200 - position[1]), (320 - position[0]))
 
-    const_x = 0.01
+    const_x = 0.024
     const_y = 0.048
     estimated_ball_position[0] += const_x
     estimated_ball_position[1] += const_y

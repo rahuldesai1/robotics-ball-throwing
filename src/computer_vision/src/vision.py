@@ -12,7 +12,7 @@ from geometry_msgs.msg import PoseStamped
 
 from sensor_msgs.msg import Image
 
-from ball_detection_utils import ball_detection, pxl_to_pose
+from ball_detection_utils import ball_detection, pxl_to_pose, ball_pose_estimation
 from bin_detection import bin_detection
 
 class Vision:
@@ -31,7 +31,7 @@ class Vision:
         print("REQUEST FOR BALL POSE")
         img_msg = rospy.wait_for_message("/cameras/left_hand_camera/image", Image)
         base_position = [0.698, 0.336, -0.205] # TODO: need to get this position
-        table_height = 0.0 # TODO: need to get this height
+        # table_height = 0.0 # TODO: need to get this height
         print("Need to update base position!")
         print("Need to udpate table height!")
         bridge = CvBridge()
@@ -41,10 +41,11 @@ class Vision:
         if not center:
             return None
         pose = pxl_to_pose(center[0],center[1])
+        estimated_pose = ball_pose_estimation(center)
         output = PoseStamped()
-        output.pose.position.x = base_position[0] + pose[0]
-        output.pose.position.y = base_position[1] + pose[1]
-        output.pose.position.z = table_height
+        output.pose.position.x = estimated_pose[0] #+ pose[0]
+        output.pose.position.y = estimated_pose[1] #+ pose[1]
+        output.pose.position.z = estimated_pose[2]
         return output
 
     # Callback 2
