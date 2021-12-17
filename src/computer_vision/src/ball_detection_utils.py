@@ -47,12 +47,28 @@ def ball_pose_estimation(position):
     # image size is 400 x 252
     base_xy_position = [0.698, 0.336, -0.205]
     x_ppx_scale = 0.001795 #0.0002885791070673891 #* (0.580 / 0.375) # per pixel shift from the base position
-    y_ppx_scale = 0.001796 #0.0017542260504471894 #* (0.580 / 0.375)
+    y_ppx_scale = 0.00172 #0.0017542260504471894 #* (0.580 / 0.375)
     estimated_ball_position = np.copy(base_xy_position)
     # center of image at (176, 200)
     estimated_ball_position[0] += x_ppx_scale * (200 - position[1])
     estimated_ball_position[1] += y_ppx_scale * (320 - position[0])
+    offset = pxl_to_pose(*position)
+    # estimated_ball_position[0] -= offset[0]
+    # estimated_ball_position[1] -= offset[1]
+    print("calibration offset", offset)
+    print(x_ppx_scale * (200 - position[1]), y_ppx_scale * (320 - position[0]))
+    print((200 - position[1]), (320 - position[0]))
+
+    const_x = 0.01
+    const_y = 0.048
+    estimated_ball_position[0] += const_x
+    estimated_ball_position[1] += const_y
+    # estimated_ball_position[0] += mx * offset[0] + bx
+    # estimated_ball_position[1] += const_y
     return estimated_ball_position
+
+    offset = pxl_to_pose(*position)
+
 
 def read_image(filepath):
     im = Image.open(filepath)
@@ -123,3 +139,24 @@ if __name__ == "__main__":
         y_shift = np.average(shifts[:, 1])
         print("X ppx scale: ", x_shift)
         print("Y ppx scale: ", y_shift)
+
+
+
+Lcam = np.array([
+    [ 2.12949203e+03, 1.55132281e+02, 8.20439554e+01, 1.41050036e+04],
+    [-1.55062713e+02, 2.13326434e+03, 9.83929178e+01, 6.94311769e+03],
+    [ 5.47928716e-02,-2.09287937e-02, 9.98278381e-01, 9.97801819e+01]])
+inches_per_meter = 39.37
+side_lengths = ((7.4/inches_per_meter)/8, (9.7/inches_per_meter)/11)
+x_res, y_res = 400, 252
+
+def pxl_to_board(px, py, Z=0):
+    X = np.linalg.inv(np.hstack((Lcam[:,0:2] ,np.array([[-1*px],[-1*py],[-1]])))).dot((-Z*Lcam[:,2]-Lcam[:,3]))
+    return X[:2]
+
+center = (x_res/2,y_res/2)
+center_board = pxl_to_board(*center)
+def pxl_to_pose(px, py):
+    """ returns meters offset from camera to ball """
+    X = pxl_to_board(px, py) - center_board
+    return [X[1]*side_lengths[1], X[0]*side_lengths[0]]

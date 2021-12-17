@@ -18,6 +18,7 @@ def diff(curr_dict, wanted):
     return d
 
 def return_to_base():
+    print("Returning to base")
     angles = [-0.05138835639416136, -0.6412039693361029,-1.6908303234466973, 0.9618059540041545, 1.1006312153077844, 2.0056798801601783, -0.25349032519806464]
     angle_dict = {}
     left = Limb('left')

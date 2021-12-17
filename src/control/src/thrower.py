@@ -108,7 +108,7 @@ class Thrower:
             # Stop if passed limit on any joint
             for joint in joints:
                 if passed(angles[joint], joint_specs[joint]["limit_angle"], joint_specs[joint]["vel"]):
-                    self.limb.set_joint_velocities({joint_name: 0})
+                    self.limb.set_joint_velocities({joint: 0})
                     return released # True if successfully thrown, False if stopped early
 
             # Set velocity
