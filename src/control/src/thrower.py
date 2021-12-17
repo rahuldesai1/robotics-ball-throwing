@@ -116,26 +116,27 @@ class Thrower:
             rospy.sleep(self.loop_period)
 
     def _getShouldAngleFromTargetPose(self, pixel_width):
-        if pixel_width == -1:
+        if pixel_width == -1:   # No bin detected --> Assume box is underneath robot
             return -0.32
         elif pixel_width < 750:
             return -0.32
-        elif pixel_width < 850:
-            return -0.5
-        elif pixel_width < 950:
-            return -0.75 
+        elif 750 <= pixel_width < 850:
+            return -0.0018 * pixel_width + 1.03
+        elif 850 <= pixel_width < 950:
+            return -0.0025 * pixel_width + 1.625
+        else:
+            return -0.32
 
     def _getVelocityFromTargetPose(self, pixel_height):
-        if pixel_height == -1:
+        if pixel_height == -1:  # No bin detected --> Assume box is underneath robot --> wrist drop
             return 2, True
-
-        if pixel_height < 450:
+        if pixel_height < 450:  # Bin very far away --> Max speed
             return 3, False
-        elif pixel_height < 500:
-            return 1.2, False
-        elif pixel_height < 520:
-            return 0.8, False
-        else:
+        if 450 <= pixel_height < 500:    # Function for far bin
+            return -0,036 * pixel_height + 19.2, False
+        elif 500 <= pixel_height < 520:   # Function for medium bin
+            return -0.02 * pixel_height + 11.2, False
+        else:                             # Super close bin
             return 2, True
 
     # Callback
