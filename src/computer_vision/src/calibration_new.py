@@ -1,6 +1,8 @@
 import numpy as np
 import cv2
 
+# https://www.geeksforgeeks.org/camera-calibration-with-python-opencv/
+
 CHECKERBOARD = (7,9)
 
 
