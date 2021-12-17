@@ -30,7 +30,7 @@ class Vision:
     def localizeBall(self, request):
         print("REQUEST FOR BALL POSE")
         img_msg = rospy.wait_for_message("/cameras/left_hand_camera/image", Image)
-        base_position = [0.5,0.5,0.5] # TODO: need to get this position
+        base_position = [0.698, 0.336, -0.205] # TODO: need to get this position
         table_height = 0.0 # TODO: need to get this height
         print("Need to update base position!")
         print("Need to udpate table height!")

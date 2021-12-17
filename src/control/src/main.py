@@ -92,6 +92,7 @@ def main():
         try:
             if char == 'f':
                 move_to_search_position(left)
+                time.sleep(0.5)
                 resp = get_target_pose()
                 print(resp.pixel_height, resp.pixel_width)
                 target_pose = resp

@@ -27,13 +27,10 @@ class Picker:
 
         self.arm = 'left'
         self.limb = Limb(self.arm)
-        self.limb.set_command_timeout(self.loop_period*5) # ensure we don't timeout
+        self.limb.set_command_timeout(0.05)
         self.gripper = robot_gripper.Gripper(self.arm)
         print('Calibrating Gripper...')
         self.gripper.calibrate()
-
-        self.group = MoveGroupCommander(self.arm + "_arm")
-        print("Service Initialized")
 
     def _moveArmToTarget(self, target):
         request = GetPositionIKRequest()
@@ -54,55 +51,23 @@ class Picker:
         request.ik_request.pose_stamped.pose.orientation.z = 0.0
         request.ik_request.pose_stamped.pose.orientation.w = 0.0
 
-        # Send the request to the service
-        response = self.compute_ik(request)
-        joint_state = response.solution.joint_state
+        try:
+            # Send the request to the service
+            response = self.compute_ik(request)
 
-        joints = {}
-        for name, position in zip(joint_state.name, joint_state.position)[1:8]:
-            joints[name] = position
+            # Print the response HERE
+            group = MoveGroupCommander(self.arm + "_arm")
 
-        self._setJointPositions(joints)
+            # Setting position and orientation target
+            group.set_pose_target(request.ik_request.pose_stamped)
 
-    def _moveArmToTargetWithMoveIt(self, target):
-        request = GetPositionIKRequest()
-        request.ik_request.group_name = self.arm + "_arm"
+            # Plan IK and execute
+            group.go() # synchronous
 
-        link = self.arm + "_gripper"
+            group.stop()
 
-        request.ik_request.ik_link_name = link
-        request.ik_request.attempts = 20
-        request.ik_request.pose_stamped.header.frame_id = "base"
-
-        # Set the desired orientation for the end effector to target, will have to tune this
-        request.ik_request.pose_stamped.pose.position.x = target.pose.position.x
-        request.ik_request.pose_stamped.pose.position.y = target.pose.position.y
-        request.ik_request.pose_stamped.pose.position.z = target.pose.position.z
-        request.ik_request.pose_stamped.pose.orientation.x = 0.0
-        request.ik_request.pose_stamped.pose.orientation.y = 1.0
-        request.ik_request.pose_stamped.pose.orientation.z = 0.0
-        request.ik_request.pose_stamped.pose.orientation.w = 0.0
-
-        # Setting position and orientation target
-        self.group.set_pose_target(request.ik_request.pose_stamped)
-
-        # Plan IK and execute
-        self.group.go(wait=True) # synchronous
-
-        self.group.stop()
-        self.group.clear_pose_targets()
-
-    def _setJointPositions(self, joint_positions, delta=0.1):
-        def close_enough(delta, target):
-            for name in target:
-                # print(name, self.limb.joint_angle(name), target[name])
-                if abs(self.limb.joint_angle(name) - target[name]) > delta:
-                    return False
-            return True
-
-        while not close_enough(delta, joint_positions):
-            self.limb.set_joint_positions(joint_positions)
-            time.sleep(0.01)
+        except rospy.ServiceException as e:
+            print("Service call failed: %s"%e)
 
     # Callback
     def pickBall(self, request):
