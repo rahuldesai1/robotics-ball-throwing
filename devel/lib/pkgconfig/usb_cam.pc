@@ -1,8 +1,8 @@
-prefix=/home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/devel
+prefix=/home/cc/ee106a/fl21/class/ee106a-aao/robotics-ball-throwing/devel
 
 Name: usb_cam
 Description: Description of usb_cam
 Version: 0.3.6
-Cflags: -I/home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/src/usb_cam/include
+Cflags: -I/home/cc/ee106a/fl21/class/ee106a-aao/robotics-ball-throwing/src/usb_cam/include
 Libs: -L${prefix}/lib -lusb_cam
 Requires: 

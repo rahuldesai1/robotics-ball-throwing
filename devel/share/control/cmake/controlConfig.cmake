@@ -67,14 +67,14 @@ set(control_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("TRUE" STREQUAL "TRUE")
-  set(control_SOURCE_PREFIX /home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/src/control)
-  set(control_DEVEL_PREFIX /home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/devel)
+  set(control_SOURCE_PREFIX /home/cc/ee106a/fl21/class/ee106a-aao/robotics-ball-throwing/src/control)
+  set(control_DEVEL_PREFIX /home/cc/ee106a/fl21/class/ee106a-aao/robotics-ball-throwing/devel)
   set(control_INSTALL_PREFIX "")
   set(control_PREFIX ${control_DEVEL_PREFIX})
 else()
   set(control_SOURCE_PREFIX "")
   set(control_DEVEL_PREFIX "")
-  set(control_INSTALL_PREFIX /home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/install)
+  set(control_INSTALL_PREFIX /home/cc/ee106a/fl21/class/ee106a-aao/robotics-ball-throwing/install)
   set(control_PREFIX ${control_INSTALL_PREFIX})
 endif()
 
@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(control_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/devel/include " STREQUAL " ")
+if(NOT "/home/cc/ee106a/fl21/class/ee106a-aao/robotics-ball-throwing/devel/include " STREQUAL " ")
   set(control_INCLUDE_DIRS "")
-  set(_include_dirs "/home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/devel/include")
+  set(_include_dirs "/home/cc/ee106a/fl21/class/ee106a-aao/robotics-ball-throwing/devel/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -110,7 +110,7 @@ if(NOT "/home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throw
         message(FATAL_ERROR "Project 'control' specifies '${idir}' as an include dir, which is not found.  It does not exist in '${include}'.  ${_report}")
       endif()
     else()
-      message(FATAL_ERROR "Project 'control' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/src/control/${idir}'.  ${_report}")
+      message(FATAL_ERROR "Project 'control' specifies '${idir}' as an include dir, which is not found.  It does neither exist as an absolute directory nor in '/home/cc/ee106a/fl21/class/ee106a-aao/robotics-ball-throwing/src/control/${idir}'.  ${_report}")
     endif()
     _list_append_unique(control_INCLUDE_DIRS ${include})
   endforeach()
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/cc/ee106a/fl21/class/ee106a-acq/ros_workspaces/robotics-ball-throwing/devel/lib;/scratch/shared/baxter_ws/devel/lib;/opt/ros/kinetic/lib)
+    foreach(path /home/cc/ee106a/fl21/class/ee106a-aao/robotics-ball-throwing/devel/lib;/home/cc/ee106a/fl21/class/ee106a-aao/robotics-ball-throwing/devel/lib;/scratch/shared/baxter_ws/devel/lib;/opt/ros/kinetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
