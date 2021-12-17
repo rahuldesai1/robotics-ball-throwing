@@ -4,51 +4,72 @@ import cv2
 import matplotlib.pyplot as plt
 from PIL import Image
 
+
 def bin_detection(im):
     """
     im - RGB image numpy array
     """
     # define the lower and upper boundaries of the green ball in the HSV color space
-    lower_boundary = (36, 0, 0)
-    upper_boundary = (70, 255,255)
+    # lower_boundary = (70, 70, 100)
+    # upper_boundary = (100, 200, 200)
 
-    # blur image
-    blurred_im = cv2.GaussianBlur(im, (11, 11), 0)
-    hsv_im = cv2.cvtColor(blurred_im, cv2.COLOR_RGB2HSV)
 
-    # construct a mask for the green ball
-    mask = cv2.inRange(hsv_im, lower_boundary, upper_boundary)
-    # remove artifacts
+    #lower = [55, 105, 55]
+    lower = [50, 100, 50]
+    upper = [140, 170, 100]
+
+    # create NumPy arrays from the boundaries
+    lower = np.array(lower, dtype = "uint8")
+    upper = np.array(upper, dtype = "uint8")
+    # find the colors within the specified boundaries and apply
+    # the mask
+    mask = cv2.inRange(im, lower, upper)
     mask = cv2.erode(mask, None, iterations=2)
     # restore cluster mass after erosion
     mask = cv2.dilate(mask, None, iterations=2)
-
-    contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+    contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[1]
     pixel = None
+
+    #only pick the center contours
     if len(contours) > 0:
         # find the largest contour in the mask
         max_contour = max(contours, key=cv2.contourArea)
-        right_edge, left_edge = np.max(max_contour[:,0]), np.min(max_contour[:,1])
+        max_contour = max_contour.reshape((max_contour.shape[0],2))
+        right_edge, left_edge = np.max(max_contour[:,0]), np.min(max_contour[:,0])
         center_x = (right_edge + left_edge) / 2
-        pxl = point_below(max_contour, center_x)
-
+        pixel = point_ontop(max_contour, center_x)
+    #plt.plot(pixel[0], pixel[1], color='red', markersize=7, marker = 'o')
+    #plt.imshow(img)
+    #plt.show() 
+    #print(pixel[1])
     return pixel
 
-def point_below(contour, x_coord):
+def point_ontop(contour, x_coord):
     """
-    Compute point along bottom edge of contour at x_coord
+    Compute point along top edge of contour at x_coord
     """
     candidates = []
     for pt in contour:
-        if abs(pt[0] - x_coord) <= 1:
+        if abs(pt[0] - x_coord) <= 5:
             candidates.append(pt)
     candidates = np.array(candidates)
     # candidates = np.where(contour, np.abs(contour[:, 0] - x_coord) <= 1)
     return candidates[np.argmin(candidates[:, 1])]
 
 
+def calculate_distance(pixel):
+    distance = -0.73170731707317 * pixel[1] + 157.80487804878
+    return distance 
+
+def calculate_angle(pixel):
+    center_x_coordinate = 200
+    angleperpixel = 1/1 # TODO
+    angle = (center_x_coordinate - pixel[0]) * angleperpixel
+    return angle
+
+"""
 def bin_pose_estimation(pixel, camera_pose, camera_rotation, intrinsic_matrix, floor_height=0, shift_to_center=0.2):
-    """
+    
     pixel - (x,y) in pxls of pxl below center of mass on the edge of bin/ground
     camera_pose - (x,y,z) in meters of camera position
     camera_rotation - 3x3 matrix that rotates from camera reference frame to robot base reference frame (z is up)
@@ -57,7 +78,7 @@ def bin_pose_estimation(pixel, camera_pose, camera_rotation, intrinsic_matrix, f
     shift_to_center - distance from edge of bin to center of bin
 
     Returns estimated bin pose in robot reference frame
-    """
+    
     homogenous_coords = intrinsic_matrix @ pixel
     ray = camera_rotation @ homogenous_coords
 
@@ -68,6 +89,7 @@ def bin_pose_estimation(pixel, camera_pose, camera_rotation, intrinsic_matrix, f
 
     bin_center_pose = bin_pose + shift_to_center * xy_ray
     return bin_center_pose
+"""
 
 def bin_cartesian_to_polar(pose, reference):
     """
@@ -80,4 +102,15 @@ def bin_cartesian_to_polar(pose, reference):
     angle = np.atan2(xy_vec[1], xy_vec[0])
     distance = np.linalg.norm(xy_vec)
     return angle, distance
+
+if __name__ == "__main__":
+    img = cv2.imread("/Users/edouardvindevogel/robotics-ball-throwing/lab_imgs/final_50.png")
+    pixel = bin_detection(img)
+    distance = calculate_distance(pixel)
+    angle = calculate_angle(pixel)
+    #plt.imshow(img)
+    #plt.plot([pixel[1]], [pixel[0]])
+    #plt.show()
+    #print(distance)
+    #print(angle)
 

@@ -24,14 +24,22 @@ struct ThrowBallRequest_
   typedef ThrowBallRequest_<ContainerAllocator> Type;
 
   ThrowBallRequest_()
-    {
+    : pixel_height(0.0)
+    , pixel_width(0.0)  {
     }
   ThrowBallRequest_(const ContainerAllocator& _alloc)
-    {
+    : pixel_height(0.0)
+    , pixel_width(0.0)  {
   (void)_alloc;
     }
 
 
+
+   typedef double _pixel_height_type;
+  _pixel_height_type pixel_height;
+
+   typedef double _pixel_width_type;
+  _pixel_width_type pixel_width;
 
 
 
@@ -68,7 +76,7 @@ namespace message_traits
 
 
 // BOOLTRAITS {'IsFixedSize': True, 'IsMessage': True, 'HasHeader': False}
-// {'std_msgs': ['/opt/ros/kinetic/share/std_msgs/cmake/../msg']}
+// {'geometry_msgs': ['/opt/ros/kinetic/share/geometry_msgs/cmake/../msg'], 'std_msgs': ['/opt/ros/kinetic/share/std_msgs/cmake/../msg']}
 
 // !!!!!!!!!!! ['__class__', '__delattr__', '__dict__', '__doc__', '__eq__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_parsed_fields', 'constants', 'fields', 'full_name', 'has_header', 'header_present', 'names', 'package', 'parsed_fields', 'short_name', 'text', 'types']
 
@@ -111,12 +119,12 @@ struct MD5Sum< ::control::ThrowBallRequest_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "d41d8cd98f00b204e9800998ecf8427e";
+    return "90d674dbca60d081c5c435b4dff7bfa7";
   }
 
   static const char* value(const ::control::ThrowBallRequest_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0xd41d8cd98f00b204ULL;
-  static const uint64_t static_value2 = 0xe9800998ecf8427eULL;
+  static const uint64_t static_value1 = 0x90d674dbca60d081ULL;
+  static const uint64_t static_value2 = 0xc5c435b4dff7bfa7ULL;
 };
 
 template<class ContainerAllocator>
@@ -136,6 +144,8 @@ struct Definition< ::control::ThrowBallRequest_<ContainerAllocator> >
   static const char* value()
   {
     return "\n\
+float64 pixel_height\n\
+float64 pixel_width\n\
 ";
   }
 
@@ -152,8 +162,11 @@ namespace serialization
 
   template<class ContainerAllocator> struct Serializer< ::control::ThrowBallRequest_<ContainerAllocator> >
   {
-    template<typename Stream, typename T> inline static void allInOne(Stream&, T)
-    {}
+    template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
+    {
+      stream.next(m.pixel_height);
+      stream.next(m.pixel_width);
+    }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
   }; // struct ThrowBallRequest_
@@ -169,8 +182,13 @@ namespace message_operations
 template<class ContainerAllocator>
 struct Printer< ::control::ThrowBallRequest_<ContainerAllocator> >
 {
-  template<typename Stream> static void stream(Stream&, const std::string&, const ::control::ThrowBallRequest_<ContainerAllocator>&)
-  {}
+  template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::control::ThrowBallRequest_<ContainerAllocator>& v)
+  {
+    s << indent << "pixel_height: ";
+    Printer<double>::stream(s, indent + "  ", v.pixel_height);
+    s << indent << "pixel_width: ";
+    Printer<double>::stream(s, indent + "  ", v.pixel_width);
+  }
 };
 
 } // namespace message_operations

@@ -1,4 +1,6 @@
 # Request message types
+float64 pixel_height
+float64 pixel_width
 ---
 # Response message types
 bool success

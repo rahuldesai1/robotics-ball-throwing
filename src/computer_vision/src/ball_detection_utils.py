@@ -67,7 +67,7 @@ def ball_pose_estimation(position):
     # estimated_ball_position[1] += const_y
     return estimated_ball_position
 
-    offset = pxl_to_pose(*position)
+    # offset = pxl_to_pose(*position)
 
 
 def read_image(filepath):

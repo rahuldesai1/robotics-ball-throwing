@@ -98,65 +98,18 @@ python3 = True if sys.hexversion > 0x03000000 else False
 import genpy
 import struct
 
-import geometry_msgs.msg
-import std_msgs.msg
 
 class GetTargetPoseResponse(genpy.Message):
-  _md5sum = "1d7a58f8ac7c61cd568e699d96ad3e1c"
+  _md5sum = "90d674dbca60d081c5c435b4dff7bfa7"
   _type = "computer_vision/GetTargetPoseResponse"
   _has_header = False  # flag to mark the presence of a Header object
   _full_text = """
-geometry_msgs/PoseStamped ball_pose
+float64 pixel_height
+float64 pixel_width
 
-
-================================================================================
-MSG: geometry_msgs/PoseStamped
-# A Pose with reference coordinate frame and timestamp
-Header header
-Pose pose
-
-================================================================================
-MSG: std_msgs/Header
-# Standard metadata for higher-level stamped data types.
-# This is generally used to communicate timestamped data 
-# in a particular coordinate frame.
-# 
-# sequence ID: consecutively increasing ID 
-uint32 seq
-#Two-integer timestamp that is expressed as:
-# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')
-# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')
-# time-handling sugar is provided by the client library
-time stamp
-#Frame this data is associated with
-# 0: no frame
-# 1: global frame
-string frame_id
-
-================================================================================
-MSG: geometry_msgs/Pose
-# A representation of pose in free space, composed of position and orientation. 
-Point position
-Quaternion orientation
-
-================================================================================
-MSG: geometry_msgs/Point
-# This contains the position of a point in free space
-float64 x
-float64 y
-float64 z
-
-================================================================================
-MSG: geometry_msgs/Quaternion
-# This represents an orientation in free space in quaternion form.
-
-float64 x
-float64 y
-float64 z
-float64 w
 """
-  __slots__ = ['ball_pose']
-  _slot_types = ['geometry_msgs/PoseStamped']
+  __slots__ = ['pixel_height','pixel_width']
+  _slot_types = ['float64','float64']
 
   def __init__(self, *args, **kwds):
     """
@@ -166,7 +119,7 @@ float64 w
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       ball_pose
+       pixel_height,pixel_width
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -175,10 +128,13 @@ float64 w
     if args or kwds:
       super(GetTargetPoseResponse, self).__init__(*args, **kwds)
       # message fields cannot be None, assign default values for those that are
-      if self.ball_pose is None:
-        self.ball_pose = geometry_msgs.msg.PoseStamped()
+      if self.pixel_height is None:
+        self.pixel_height = 0.
+      if self.pixel_width is None:
+        self.pixel_width = 0.
     else:
-      self.ball_pose = geometry_msgs.msg.PoseStamped()
+      self.pixel_height = 0.
+      self.pixel_width = 0.
 
   def _get_types(self):
     """
@@ -193,15 +149,7 @@ float64 w
     """
     try:
       _x = self
-      buff.write(_get_struct_3I().pack(_x.ball_pose.header.seq, _x.ball_pose.header.stamp.secs, _x.ball_pose.header.stamp.nsecs))
-      _x = self.ball_pose.header.frame_id
-      length = len(_x)
-      if python3 or type(_x) == unicode:
-        _x = _x.encode('utf-8')
-        length = len(_x)
-      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
-      _x = self
-      buff.write(_get_struct_7d().pack(_x.ball_pose.pose.position.x, _x.ball_pose.pose.position.y, _x.ball_pose.pose.position.z, _x.ball_pose.pose.orientation.x, _x.ball_pose.pose.orientation.y, _x.ball_pose.pose.orientation.z, _x.ball_pose.pose.orientation.w))
+      buff.write(_get_struct_2d().pack(_x.pixel_height, _x.pixel_width))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -212,26 +160,11 @@ float64 w
     """
     codecs.lookup_error("rosmsg").msg_type = self._type
     try:
-      if self.ball_pose is None:
-        self.ball_pose = geometry_msgs.msg.PoseStamped()
       end = 0
       _x = self
       start = end
-      end += 12
-      (_x.ball_pose.header.seq, _x.ball_pose.header.stamp.secs, _x.ball_pose.header.stamp.nsecs,) = _get_struct_3I().unpack(str[start:end])
-      start = end
-      end += 4
-      (length,) = _struct_I.unpack(str[start:end])
-      start = end
-      end += length
-      if python3:
-        self.ball_pose.header.frame_id = str[start:end].decode('utf-8', 'rosmsg')
-      else:
-        self.ball_pose.header.frame_id = str[start:end]
-      _x = self
-      start = end
-      end += 56
-      (_x.ball_pose.pose.position.x, _x.ball_pose.pose.position.y, _x.ball_pose.pose.position.z, _x.ball_pose.pose.orientation.x, _x.ball_pose.pose.orientation.y, _x.ball_pose.pose.orientation.z, _x.ball_pose.pose.orientation.w,) = _get_struct_7d().unpack(str[start:end])
+      end += 16
+      (_x.pixel_height, _x.pixel_width,) = _get_struct_2d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -245,15 +178,7 @@ float64 w
     """
     try:
       _x = self
-      buff.write(_get_struct_3I().pack(_x.ball_pose.header.seq, _x.ball_pose.header.stamp.secs, _x.ball_pose.header.stamp.nsecs))
-      _x = self.ball_pose.header.frame_id
-      length = len(_x)
-      if python3 or type(_x) == unicode:
-        _x = _x.encode('utf-8')
-        length = len(_x)
-      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
-      _x = self
-      buff.write(_get_struct_7d().pack(_x.ball_pose.pose.position.x, _x.ball_pose.pose.position.y, _x.ball_pose.pose.position.z, _x.ball_pose.pose.orientation.x, _x.ball_pose.pose.orientation.y, _x.ball_pose.pose.orientation.z, _x.ball_pose.pose.orientation.w))
+      buff.write(_get_struct_2d().pack(_x.pixel_height, _x.pixel_width))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -265,26 +190,11 @@ float64 w
     """
     codecs.lookup_error("rosmsg").msg_type = self._type
     try:
-      if self.ball_pose is None:
-        self.ball_pose = geometry_msgs.msg.PoseStamped()
       end = 0
       _x = self
       start = end
-      end += 12
-      (_x.ball_pose.header.seq, _x.ball_pose.header.stamp.secs, _x.ball_pose.header.stamp.nsecs,) = _get_struct_3I().unpack(str[start:end])
-      start = end
-      end += 4
-      (length,) = _struct_I.unpack(str[start:end])
-      start = end
-      end += length
-      if python3:
-        self.ball_pose.header.frame_id = str[start:end].decode('utf-8', 'rosmsg')
-      else:
-        self.ball_pose.header.frame_id = str[start:end]
-      _x = self
-      start = end
-      end += 56
-      (_x.ball_pose.pose.position.x, _x.ball_pose.pose.position.y, _x.ball_pose.pose.position.z, _x.ball_pose.pose.orientation.x, _x.ball_pose.pose.orientation.y, _x.ball_pose.pose.orientation.z, _x.ball_pose.pose.orientation.w,) = _get_struct_7d().unpack(str[start:end])
+      end += 16
+      (_x.pixel_height, _x.pixel_width,) = _get_struct_2d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -293,20 +203,14 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_3I = None
-def _get_struct_3I():
-    global _struct_3I
-    if _struct_3I is None:
-        _struct_3I = struct.Struct("<3I")
-    return _struct_3I
-_struct_7d = None
-def _get_struct_7d():
-    global _struct_7d
-    if _struct_7d is None:
-        _struct_7d = struct.Struct("<7d")
-    return _struct_7d
+_struct_2d = None
+def _get_struct_2d():
+    global _struct_2d
+    if _struct_2d is None:
+        _struct_2d = struct.Struct("<2d")
+    return _struct_2d
 class GetTargetPose(object):
   _type          = 'computer_vision/GetTargetPose'
-  _md5sum = '1d7a58f8ac7c61cd568e699d96ad3e1c'
+  _md5sum = '90d674dbca60d081c5c435b4dff7bfa7'
   _request_class  = GetTargetPoseRequest
   _response_class = GetTargetPoseResponse

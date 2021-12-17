@@ -1,4 +1,5 @@
 # Request message types
 ---
 # Response message types
-geometry_msgs/PoseStamped ball_pose
+float64 pixel_height
+float64 pixel_width

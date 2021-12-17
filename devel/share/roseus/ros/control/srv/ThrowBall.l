@@ -20,27 +20,48 @@
 
 (defclass control::ThrowBallRequest
   :super ros::object
-  :slots ())
+  :slots (_pixel_height _pixel_width ))
 
 (defmethod control::ThrowBallRequest
   (:init
    (&key
+    ((:pixel_height __pixel_height) 0.0)
+    ((:pixel_width __pixel_width) 0.0)
     )
    (send-super :init)
+   (setq _pixel_height (float __pixel_height))
+   (setq _pixel_width (float __pixel_width))
    self)
+  (:pixel_height
+   (&optional __pixel_height)
+   (if __pixel_height (setq _pixel_height __pixel_height)) _pixel_height)
+  (:pixel_width
+   (&optional __pixel_width)
+   (if __pixel_width (setq _pixel_width __pixel_width)) _pixel_width)
   (:serialization-length
    ()
    (+
-    0
+    ;; float64 _pixel_height
+    8
+    ;; float64 _pixel_width
+    8
     ))
   (:serialize
    (&optional strm)
    (let ((s (if strm strm
               (make-string-output-stream (send self :serialization-length)))))
+     ;; float64 _pixel_height
+       (sys::poke _pixel_height (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
+     ;; float64 _pixel_width
+       (sys::poke _pixel_width (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
    (buf &optional (ptr- 0))
+   ;; float64 _pixel_height
+     (setq _pixel_height (sys::peek buf ptr- :double)) (incf ptr- 8)
+   ;; float64 _pixel_width
+     (setq _pixel_width (sys::peek buf ptr- :double)) (incf ptr- 8)
    ;;
    self)
   )
@@ -86,7 +107,7 @@
   :super ros::object
   :slots ())
 
-(setf (get control::ThrowBall :md5sum-) "358e233cde0c8a8bcfea4ce193f8fc15")
+(setf (get control::ThrowBall :md5sum-) "f7e1f764558f025facd58a98ecb551a0")
 (setf (get control::ThrowBall :datatype-) "control/ThrowBall")
 (setf (get control::ThrowBall :request) control::ThrowBallRequest)
 (setf (get control::ThrowBall :response) control::ThrowBallResponse)
@@ -94,20 +115,24 @@
 (defmethod control::ThrowBallRequest
   (:response () (instance control::ThrowBallResponse :init)))
 
-(setf (get control::ThrowBallRequest :md5sum-) "358e233cde0c8a8bcfea4ce193f8fc15")
+(setf (get control::ThrowBallRequest :md5sum-) "f7e1f764558f025facd58a98ecb551a0")
 (setf (get control::ThrowBallRequest :datatype-) "control/ThrowBallRequest")
 (setf (get control::ThrowBallRequest :definition-)
       "
+float64 pixel_height
+float64 pixel_width
 ---
 
 bool success
 
 ")
 
-(setf (get control::ThrowBallResponse :md5sum-) "358e233cde0c8a8bcfea4ce193f8fc15")
+(setf (get control::ThrowBallResponse :md5sum-) "f7e1f764558f025facd58a98ecb551a0")
 (setf (get control::ThrowBallResponse :datatype-) "control/ThrowBallResponse")
 (setf (get control::ThrowBallResponse :definition-)
       "
+float64 pixel_height
+float64 pixel_width
 ---
 
 bool success
@@ -116,6 +141,6 @@ bool success
 
 
 
-(provide :control/ThrowBall "358e233cde0c8a8bcfea4ce193f8fc15")
+(provide :control/ThrowBall "f7e1f764558f025facd58a98ecb551a0")
 
 
